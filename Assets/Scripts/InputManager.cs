@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.CustomTool;
 
-public class InputManager : MonoBehaviour
+public class InputManager : GameSystemBase
 {
     private PlayerInputActions inputActions;
 
@@ -11,17 +12,34 @@ public class InputManager : MonoBehaviour
 
     public Vector2 LookInput { get; private set; }
 
-    void Awake()
+    public InputManager(SurvivorLikeGame2DFacade survivorLikeGame) : base(survivorLikeGame)
+    {
+        Initialize();
+    }
+
+    public override void Initialize()
     {
         inputActions = new PlayerInputActions();
+
+        inputActions.Enable();
 
         inputActions.Player.Move.performed += ctx => MoveInput = ctx.ReadValue<Vector2>();
         inputActions.Player.Move.canceled += _ => MoveInput = Vector2.zero;
 
         inputActions.Player.Look.performed += ctx => LookInput = ctx.ReadValue<Vector2>();
         //inputActions.Player.Look.canceled += _ => LookInput = Vector2.zero;
+
+        inputActions.Player.Attack.performed += ctx => OnClick();
+        //inputActions.Player.Attack.canceled += ctx => IsAttack = false;
     }
 
-    void OnEnable() => inputActions.Enable();
-    void OnDisable() => inputActions.Disable();
+    public void OnClick()
+    {
+        survivorLikeGame.HandleAttack();
+    }
+
+    public override void Release()
+    {
+        //inputActions.Disable();
+    }
 }
