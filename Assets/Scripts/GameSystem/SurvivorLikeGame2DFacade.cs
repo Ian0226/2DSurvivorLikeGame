@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SurvivorLikeGame2DFacade
 {
@@ -19,12 +20,17 @@ public class SurvivorLikeGame2DFacade
     private InputManager _inputManager = null;
     private PlayerController _playerController = null;
 
+    //UI class
+    PlayerAttackCDUI _playerAttackCDUI = null;
+
     #endregion
 
     public void Initialize()
     {
         _inputManager = new InputManager(this);
         _playerController = new PlayerController(this);
+
+        _playerAttackCDUI = new PlayerAttackCDUI(this);
     }
 
     public void Update()
@@ -56,6 +62,30 @@ public class SurvivorLikeGame2DFacade
     {
         if (_playerController != null)
             _playerController.HandleAttack();
+    }
+
+    public Image GetAttackCDHintImg()
+    {
+        return _playerAttackCDUI.AttackCDHintImg;
+    }
+
+    /// <summary>
+    /// 設定攻擊CD時間的提示UI的FillAmount
+    /// </summary>
+    /// <param name="fillAmount"></param>
+    public void SetAttackCDImgFillAmount(float fillAmount)
+    {
+        if (_playerAttackCDUI != null)
+            _playerAttackCDUI.SetAttackCDImgFillAmount(fillAmount);
+    }
+
+    /// <summary>
+    /// 獲取玩家當前瞄準方向
+    /// </summary>
+    /// <returns></returns>
+    public Vector2 GetPlayerAimDir()
+    {
+        return _playerController.AimDirection;
     }
     #endregion
 }
