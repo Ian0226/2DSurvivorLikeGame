@@ -17,8 +17,11 @@ public class SurvivorLikeGame2DFacade
     }
 
     #region Class Member
+    //Game Systems
     private InputManager _inputManager = null;
     private PlayerController _playerController = null;
+    private EnemyInsSystem _enemyInsSystem = null;
+    private WaveSystem _waveSystem = null;
 
     //UI class
     PlayerAttackCDUI _playerAttackCDUI = null;
@@ -27,15 +30,21 @@ public class SurvivorLikeGame2DFacade
 
     public void Initialize()
     {
+        //Game Systems
         _inputManager = new InputManager(this);
         _playerController = new PlayerController(this);
+        _enemyInsSystem = new EnemyInsSystem(this);
+        _waveSystem = new WaveSystem(this);
 
+        //UI
         _playerAttackCDUI = new PlayerAttackCDUI(this);
     }
 
     public void Update()
     {
         _playerController.Update();
+        _enemyInsSystem.Update();
+        _waveSystem.Update();
     }
 
     public void Release()
@@ -44,6 +53,16 @@ public class SurvivorLikeGame2DFacade
     }
 
     #region Functions
+
+    /// <summary>
+    /// 獲取玩家當前位置
+    /// </summary>
+    /// <returns></returns>
+    public Vector2 GetPlayerPos()
+    {
+        return _playerController.PlayerPos;
+    }
+
     /// <summary>
     /// 獲取InputManager
     /// </summary>
@@ -64,6 +83,10 @@ public class SurvivorLikeGame2DFacade
             _playerController.HandleAttack();
     }
 
+    /// <summary>
+    /// 獲取攻擊CD時間UI圖片
+    /// </summary>
+    /// <returns></returns>
     public Image GetAttackCDHintImg()
     {
         return _playerAttackCDUI.AttackCDHintImg;

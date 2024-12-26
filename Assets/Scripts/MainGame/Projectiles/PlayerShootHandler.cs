@@ -10,7 +10,7 @@ public class PlayerShootHandler
 {
     private PlayerController _playerController = null;
     /// <summary>
-    /// 物件池
+    /// 子彈物件池
     /// </summary>
     private ObjectPool<ProjectileBase> projectilePool = null;
 
