@@ -38,6 +38,8 @@ public class EnemyInsSystem : GameSystemBase
         insPosOffsetMax = 15f;
         insPosOffsetMin = 10f;
 
+        insIndex = 0;
+
         enemyPool = new ObjectPool<EnemyBase>(
             () => 
             {
@@ -61,7 +63,7 @@ public class EnemyInsSystem : GameSystemBase
             (enemy) =>
             {
                 GameObject.Destroy(enemy.gameObject);
-            },true,100,10000
+            },true,10,100
             );
     }
 
@@ -69,13 +71,16 @@ public class EnemyInsSystem : GameSystemBase
     {
         if (Input.GetKeyDown(KeyCode.U))//For test
         {
-            InsEnemy(0);
+            //InsEnemy();
         }
     }
 
-    private void InsEnemy(int index)
+    /// <summary>
+    /// 生成敵人
+    /// </summary>
+    /// <param name="index">生成敵人類型Index，對應存放各個種類敵人的insEnemies list</param>
+    public void InsEnemy()
     {
-        this.insIndex = index;
         float theta = Random.Range(0, 360);
         float insPosOffset = Random.Range(insPosOffsetMin, insPosOffsetMax);
         Vector2 playerPos = survivorLikeGame.GetPlayerPos();

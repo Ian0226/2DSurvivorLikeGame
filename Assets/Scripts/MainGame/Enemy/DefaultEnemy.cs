@@ -7,7 +7,7 @@ public class DefaultEnemy : EnemyBase
 {
     public override void Initialize()
     {
-        this.speed = 0.9f;
+        this.speed = 0.7f;
 
         targetPlayer = UnityTool.FindGameObject("Player").transform;
     }

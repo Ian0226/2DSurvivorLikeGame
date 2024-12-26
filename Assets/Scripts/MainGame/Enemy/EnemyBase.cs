@@ -6,6 +6,7 @@ public abstract class EnemyBase : MonoBehaviour
 {
     protected float speed = 0.0f;
     protected int damage = 0;
+    protected int hp = 0;
 
     protected Transform targetPlayer = null;
 

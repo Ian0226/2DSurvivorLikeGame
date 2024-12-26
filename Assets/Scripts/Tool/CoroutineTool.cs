@@ -18,20 +18,36 @@ public class CoroutineTool : MonoBehaviour
         }
     }
 
-    public static void ExecuteCDCount(PlayerController player, float cd, float currentCD)
+    private static long timeSecond = 0;
+    public static long TimeSecond { get => timeSecond; }
+
+    public static void ExcuteInvokeRepeatInsEnemy(System.Action repeatAction, int intervalTime)
     {
-        Instance.StartCoroutine(CDCountCoroutine(player, cd, currentCD));
-        Debug.Log("StartCoroutine");
+        Instance.StartCoroutine(InvokeRepeatInsEnemy(repeatAction,intervalTime));
     }
 
-    private static IEnumerator CDCountCoroutine(PlayerController player,float cd,float currentCD)
+    public static void ExcuteTimer(System.Action repeatAction)
     {
-        while(currentCD < cd)
+        Instance.StartCoroutine(Timer(repeatAction));
+    }
+
+    private static IEnumerator InvokeRepeatInsEnemy(System.Action repeatAction,int intervalTime)
+    {
+        while (true)
         {
-            currentCD += 1 * Time.deltaTime;
-            Debug.Log(currentCD);
+            repeatAction.Invoke();
+            yield return new WaitForSeconds(intervalTime);
         }
-        yield return new WaitUntil(() => currentCD >= cd);
-        player.CanAttack = true;
+    }
+
+    private static IEnumerator Timer(System.Action repeatAction)
+    {
+        Debug.Log("計時開始");
+        while (true)
+        {
+            repeatAction.Invoke();
+            timeSecond++;
+            yield return new WaitForSeconds(1);
+        }
     }
 }

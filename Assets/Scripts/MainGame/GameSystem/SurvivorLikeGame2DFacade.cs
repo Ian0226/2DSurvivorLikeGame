@@ -24,7 +24,8 @@ public class SurvivorLikeGame2DFacade
     private WaveSystem _waveSystem = null;
 
     //UI class
-    PlayerAttackCDUI _playerAttackCDUI = null;
+    private PlayerAttackCDUI _playerAttackCDUI = null;
+    private GameInfoUI _gameInfoUI = null;
 
     #endregion
 
@@ -38,6 +39,7 @@ public class SurvivorLikeGame2DFacade
 
         //UI
         _playerAttackCDUI = new PlayerAttackCDUI(this);
+        _gameInfoUI = new GameInfoUI(this);
     }
 
     public void Update()
@@ -45,6 +47,9 @@ public class SurvivorLikeGame2DFacade
         _playerController.Update();
         _enemyInsSystem.Update();
         _waveSystem.Update();
+
+        //UI
+        _gameInfoUI.Update();
     }
 
     public void Release()
@@ -109,6 +114,16 @@ public class SurvivorLikeGame2DFacade
     public Vector2 GetPlayerAimDir()
     {
         return _playerController.AimDirection;
+    }
+
+    /// <summary>
+    /// ¥Í¦¨¼Ä¤H
+    /// </summary>
+    /// <param name="index"></param>
+    public void InsEnemy()
+    {
+        if(_enemyInsSystem != null)
+            _enemyInsSystem.InsEnemy();
     }
     #endregion
 }
