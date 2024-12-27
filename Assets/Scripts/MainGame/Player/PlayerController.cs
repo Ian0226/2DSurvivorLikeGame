@@ -27,9 +27,9 @@ public class PlayerController : GameSystemBase
     private bool canAttack = false;
 
     /// <summary>
-    /// 玩家攻擊力
+    /// 玩家血量
     /// </summary>
-    private float damage = 0;
+    private int hp = 0;
 
     #endregion
 
@@ -76,12 +76,13 @@ public class PlayerController : GameSystemBase
     #endregion
 
     public bool CanAttack { get => canAttack; set => canAttack = value; }
-    public Vector2 MousePos { get => mousePos; set => mousePos = value; }
-    public Vector2 PlayerPos { get => playerPos; set => playerPos = value; }
+    public Vector2 MousePos { get => mousePos;}
+    public Vector2 PlayerPos { get => playerPos;}
     public GameObject PlayerCurrentProjectile { get => playerCurrentProjectile; set => playerCurrentProjectile = value; }
     public PlayerAttackModeEnum PlayerAttackMode { get => playerAttackMode; set => playerAttackMode = value; }
     public int ProjectilesCount { get => projectilesCount; set => projectilesCount = value; }
-    public Vector2 AimDirection { get => aimDirection; set => aimDirection = value; }
+    public Vector2 AimDirection { get => aimDirection;}
+    public int Hp { get => hp;}
 
     public PlayerController(SurvivorLikeGame2DFacade survivorLikeGame) : base(survivorLikeGame)
     {
@@ -114,7 +115,7 @@ public class PlayerController : GameSystemBase
         attackCDTime = 10;
         canAttack = true;
 
-        damage = 1f;
+        hp = 5;
 
         PlayerCurrentProjectile = (GameObject)Resources.Load("Prefabs/Projectiles/DefaultProjectile");
         
@@ -122,9 +123,9 @@ public class PlayerController : GameSystemBase
 
     private void SetVectors()
     {
-        MousePos = Camera.main.ScreenToWorldPoint(new Vector2(inputManager.LookInput.x, inputManager.LookInput.y));
-        PlayerPos = playerTransform.position;
-        AimDirection = MousePos - PlayerPos;
+        mousePos = Camera.main.ScreenToWorldPoint(new Vector2(inputManager.LookInput.x, inputManager.LookInput.y));
+        playerPos = playerTransform.position;
+        aimDirection = MousePos - PlayerPos;
         Debug.DrawRay(PlayerPos, MousePos - PlayerPos, Color.green);
     }
 
@@ -141,7 +142,7 @@ public class PlayerController : GameSystemBase
     {
         if (inputManager.LookInput == Vector2.zero) return;
 
-        playerTransform.rotation = Quaternion.FromToRotation(Vector3.up, AimDirection);
+        playerTransform.rotation = Quaternion.FromToRotation(Vector2.up, AimDirection);
 
         //Debug.Log(inputManager.LookInput.x + " " + inputManager.LookInput.y);
         //playerTransform.up = (target - playerPos).normalized;
@@ -154,7 +155,7 @@ public class PlayerController : GameSystemBase
             if (survivorLikeGame.GetAttackCDHintImg() == null) return;
             currentAttackCD -= 0.01f;
             survivorLikeGame.SetAttackCDImgFillAmount(currentAttackCD);
-            Debug.Log(currentAttackCD);
+            //Debug.Log(currentAttackCD);
             await Task.Delay(attackCDTime);
         }
         Debug.Log("CD結束，可以攻擊");
@@ -185,4 +186,15 @@ public class PlayerController : GameSystemBase
         _shootProjectileHandler.Shoot();
     }
 
+    public void TakeDamage(int damage)
+    {
+        if(hp <= damage)
+        {
+            hp = 0;
+            Debug.Log("玩家死亡");
+            return;
+        }
+        Debug.Log("受到攻擊");
+        hp -= damage;
+    }
 }

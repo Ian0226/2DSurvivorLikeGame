@@ -59,6 +59,7 @@ public class SurvivorLikeGame2DFacade
 
     #region Functions
 
+    //PlayerController
     /// <summary>
     /// 獲取玩家當前位置
     /// </summary>
@@ -66,17 +67,6 @@ public class SurvivorLikeGame2DFacade
     public Vector2 GetPlayerPos()
     {
         return _playerController.PlayerPos;
-    }
-
-    /// <summary>
-    /// 獲取InputManager
-    /// </summary>
-    public InputManager GetInputManager()
-    {
-        if (_inputManager != null)
-            return _inputManager;
-        else
-            return null;
     }
 
     /// <summary>
@@ -88,6 +78,43 @@ public class SurvivorLikeGame2DFacade
             _playerController.HandleAttack();
     }
 
+    /// <summary>
+    /// 獲取玩家當前瞄準方向
+    /// </summary>
+    /// <returns></returns>
+    public Vector2 GetPlayerAimDir()
+    {
+        return _playerController.AimDirection;
+    }
+
+    /// <summary>
+    /// 玩家受到傷害
+    /// </summary>
+    /// <param name="damage"></param>
+    public void PlayerTakeDamage(int damage)
+    {
+        if (_playerController != null)
+            _playerController.TakeDamage(damage);
+    }
+
+    public int GetPlayerHP()
+    {
+        return _playerController.Hp;
+    }
+
+    //Input Manager
+    /// <summary>
+    /// 獲取InputManager
+    /// </summary>
+    public InputManager GetInputManager()
+    {
+        if (_inputManager != null)
+            return _inputManager;
+        else
+            return null;
+    }
+
+    //PlayerAttackCDUI
     /// <summary>
     /// 獲取攻擊CD時間UI圖片
     /// </summary>
@@ -107,15 +134,7 @@ public class SurvivorLikeGame2DFacade
             _playerAttackCDUI.SetAttackCDImgFillAmount(fillAmount);
     }
 
-    /// <summary>
-    /// 獲取玩家當前瞄準方向
-    /// </summary>
-    /// <returns></returns>
-    public Vector2 GetPlayerAimDir()
-    {
-        return _playerController.AimDirection;
-    }
-
+    //EnemyInsSystem
     /// <summary>
     /// 生成敵人
     /// </summary>
@@ -124,6 +143,25 @@ public class SurvivorLikeGame2DFacade
     {
         if(_enemyInsSystem != null)
             _enemyInsSystem.InsEnemy();
+    }
+
+    /// <summary>
+    /// 用index獲取當前遊戲場景中存在的特定敵人
+    /// </summary>
+    /// <param name="index">敵人的索引</param>
+    /// <returns></returns>
+    public EnemyBase GetCurrentInGameEnemies(int index)
+    {
+        return _enemyInsSystem.GetEnemyInEnemies(index);
+    }
+
+    /// <summary>
+    /// 獲取當前波數
+    /// </summary>
+    /// <returns></returns>
+    public float GetCurrentWave()
+    {
+        return _waveSystem.Wave;
     }
     #endregion
 }

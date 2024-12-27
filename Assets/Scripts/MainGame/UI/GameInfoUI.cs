@@ -9,6 +9,7 @@ public class GameInfoUI : UserInterface
 {
     private GameObject containerCancas = null;
     private TextMeshProUGUI testGameInfoText = null;
+    private TextMeshProUGUI playerHPText = null;
     public GameInfoUI(SurvivorLikeGame2DFacade survivorLikeGame) : base(survivorLikeGame)
     {
         Initialize();
@@ -19,10 +20,14 @@ public class GameInfoUI : UserInterface
         containerCancas = UnityTool.FindGameObject("GameInfoUI");
 
         testGameInfoText = UITool.FindGameObjectInSpecificCanvas("GameInfoUI", "GameTime").GetComponent<TextMeshProUGUI>();
+        playerHPText = UITool.FindGameObjectInSpecificCanvas("GameInfoUI", "HPText").GetComponent<TextMeshProUGUI>();
     }
 
     public override void Update()
     {
-        testGameInfoText.text = (CoroutineTool.TimeSecond / 60).ToString("d2") + " : " + (CoroutineTool.TimeSecond % 60).ToString("d2");
+        testGameInfoText.text = "Wave : " + survivorLikeGame.GetCurrentWave() + " "
+            + (CoroutineTool.TimeSecond / 60).ToString("d2") + " : " + (CoroutineTool.TimeSecond % 60).ToString("d2");
+
+        playerHPText.text = survivorLikeGame.GetPlayerHP().ToString();
     }
 }

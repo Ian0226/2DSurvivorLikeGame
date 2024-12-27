@@ -7,7 +7,10 @@ public class DefaultEnemy : EnemyBase
 {
     public override void Initialize()
     {
+        this.enemyName = "DefaultEnemy";
         this.speed = 0.7f;
+        this.damage = 1;
+        this.hp = 1;
 
         targetPlayer = UnityTool.FindGameObject("Player").transform;
     }
@@ -28,6 +31,18 @@ public class DefaultEnemy : EnemyBase
 
     protected override void AttackPlayer()
     {
-        Debug.Log("攻擊到玩家，消除此敵人物件");
+        SurvivorLikeGame2DFacade.Instance.PlayerTakeDamage(this.damage);
+        //Debug.Log("攻擊到玩家，消除此敵人物件 : " + this.gameObject.name);
+    }
+
+    public override void TakeDamage(int damage)
+    {
+        if(hp <= damage)
+        {
+            hp = 0;
+            recycle(this);
+            return;
+        }
+        hp -= damage;
     }
 }

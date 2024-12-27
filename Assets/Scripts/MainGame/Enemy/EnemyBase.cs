@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class EnemyBase : MonoBehaviour
 {
+    protected string enemyName = "Default";
     protected float speed = 0.0f;
     protected int damage = 0;
     protected int hp = 0;
@@ -12,6 +13,8 @@ public abstract class EnemyBase : MonoBehaviour
 
     public delegate void Recycle(EnemyBase enemy);
     public Recycle recycle;
+
+    public string EnemyName { get => enemyName;}
 
     private void Start()
     {
@@ -27,7 +30,7 @@ public abstract class EnemyBase : MonoBehaviour
     public virtual void FollowPlayer() 
     {
         this.transform.position = Vector3.MoveTowards(this.transform.position, this.targetPlayer.position, speed * Time.fixedDeltaTime);
-        this.transform.rotation = Quaternion.FromToRotation(Vector3.up, targetPlayer.position);
+        this.transform.rotation = Quaternion.FromToRotation(Vector2.up, targetPlayer.position - this.transform.position);
     }
 
     public void CollisionPlayer()
@@ -37,4 +40,5 @@ public abstract class EnemyBase : MonoBehaviour
     }
 
     protected abstract void AttackPlayer();
+    public abstract void TakeDamage(int damage);
 }

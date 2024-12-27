@@ -21,7 +21,7 @@ public class CoroutineTool : MonoBehaviour
     private static long timeSecond = 0;
     public static long TimeSecond { get => timeSecond; }
 
-    public static void ExcuteInvokeRepeatInsEnemy(System.Action repeatAction, int intervalTime)
+    public static void ExcuteInvokeRepeatInsEnemy(System.Action repeatAction, float intervalTime)
     {
         Instance.StartCoroutine(InvokeRepeatInsEnemy(repeatAction,intervalTime));
     }
@@ -31,7 +31,7 @@ public class CoroutineTool : MonoBehaviour
         Instance.StartCoroutine(Timer(repeatAction));
     }
 
-    private static IEnumerator InvokeRepeatInsEnemy(System.Action repeatAction,int intervalTime)
+    private static IEnumerator InvokeRepeatInsEnemy(System.Action repeatAction,float intervalTime)
     {
         while (true)
         {

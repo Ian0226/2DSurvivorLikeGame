@@ -10,6 +10,7 @@ public class DefualtProjectile : ProjectileBase
 
         this.speed = 0.7f;
         this.existTime = 1f;
+        
     }
 
     public override void Update()
@@ -20,5 +21,17 @@ public class DefualtProjectile : ProjectileBase
     public override void Move()
     {
         base.Move();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        switch(collision.gameObject.tag)
+        {
+            case "Enemy":
+                _survivorLikeGame.GetCurrentInGameEnemies(System.Int32.Parse(collision.gameObject.name.Split("_")[1]))
+                    .TakeDamage(this.damage);
+                existTime = 0;//¾P·´¤l¼u
+                break;
+        }
     }
 }

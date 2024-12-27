@@ -10,6 +10,16 @@ public class EnemyInsSystem : GameSystemBase
 {
     private List<GameObject> insEnemies = new List<GameObject>();
 
+    /// <summary>
+    /// 當前遊戲場景中存在的敵人
+    /// </summary>
+    private Hashtable currentInGameEnemies = new Hashtable();
+
+    /// <summary>
+    /// 當前場中敵人編號
+    /// </summary>
+    protected int enemyNumber = 0;
+
     //private List<Vector2> insPosition = new List<Vector2>();
 
     //private int[] currentInsIndex;
@@ -63,16 +73,13 @@ public class EnemyInsSystem : GameSystemBase
             (enemy) =>
             {
                 GameObject.Destroy(enemy.gameObject);
-            },true,10,100
+            },true,50,1000
             );
     }
 
     public override void Update()
     {
-        if (Input.GetKeyDown(KeyCode.U))//For test
-        {
-            //InsEnemy();
-        }
+
     }
 
     /// <summary>
@@ -88,5 +95,19 @@ public class EnemyInsSystem : GameSystemBase
         //Vector2 playerPos = survivorLikeGame.GetPlayerPos();
         //Vector2 insPos = new Vector2(playerPos.x + Random.Range(insPosOffsetMin, insPosOffsetMax), playerPos.y + Random.Range(insPosOffsetMin, insPosOffsetMax));
         EnemyBase enemy = enemyPool.Get();
+        enemy.gameObject.name = enemy.EnemyName + $"_{enemyNumber}";
+        currentInGameEnemies.Add(enemyNumber, enemy);
+        enemyNumber++;
+    }
+
+    /// <summary>
+    /// 使用index獲取遊戲場景中存在的敵人
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public EnemyBase GetEnemyInEnemies(int index)
+    {
+        //Debug.Log(index);
+        return (EnemyBase)currentInGameEnemies[index];
     }
 }

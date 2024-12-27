@@ -4,6 +4,9 @@ using UnityEngine;
 
 public abstract class ProjectileBase : MonoBehaviour
 {
+    protected SurvivorLikeGame2DFacade _survivorLikeGame = null;
+
+    protected int damage = 0;
     protected float speed = 0.0f;
     protected float existTime = 0.0f;
 
@@ -33,7 +36,11 @@ public abstract class ProjectileBase : MonoBehaviour
 
     public virtual void Intialize() 
     {
+        _survivorLikeGame = SurvivorLikeGame2DFacade.Instance;
+
         rb = this.GetComponent<Rigidbody2D>();
+
+        damage = 1;
     }
 
     public virtual void Move() 
