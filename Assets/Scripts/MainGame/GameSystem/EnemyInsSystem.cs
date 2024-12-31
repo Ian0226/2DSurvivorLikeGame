@@ -56,7 +56,8 @@ public class EnemyInsSystem : GameSystemBase
                 EnemyBase enemy = GameObject.Instantiate(insEnemies[insIndex], insPos, Quaternion.identity).GetComponent<EnemyBase>();
                 enemy.recycle = (e) =>
                 {
-                    enemyPool.Release(e);
+                    if(e != null)
+                        enemyPool.Release(e);
                 };
                 return enemy;
             },

@@ -7,12 +7,17 @@ public class DefaultEnemy : EnemyBase
 {
     public override void Initialize()
     {
+        _survivorLikeGame = SurvivorLikeGame2DFacade.Instance;
+
         this.enemyName = "DefaultEnemy";
-        this.speed = 0.7f;
+        this.speed = 4.9f;
         this.damage = 1;
         this.hp = 1;
 
+        this.rewardScore = 1;
+
         targetPlayer = UnityTool.FindGameObject("Player").transform;
+
     }
     public override void FollowPlayer()
     {
@@ -37,12 +42,21 @@ public class DefaultEnemy : EnemyBase
 
     public override void TakeDamage(int damage)
     {
-        if(hp <= damage)
+        if(hp <= damage)//¦º¤`
         {
             hp = 0;
             recycle(this);
+            _survivorLikeGame.SetPlayerScore(this.rewardScore);
             return;
         }
         hp -= damage;
+    }
+
+    /// <summary>
+    /// ªþ¥[²§±`ª¬ºA
+    /// </summary>
+    public override void TakeAilmentsDamage(System.Action stateAction)
+    {
+        
     }
 }

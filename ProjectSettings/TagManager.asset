@@ -15,8 +15,8 @@ TagManager:
   - UI
   - PlayerDefault
   - ProjectileDefault
-  - 
-  - 
+  - EnemyDefault
+  - GroundBoundary
   - 
   - 
   - 
@@ -43,9 +43,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Ground
+    uniqueID: 3656889955
+    locked: 0
   - name: Player
     uniqueID: 2513460411
     locked: 0
   - name: Enemy
     uniqueID: 4255594845
+    locked: 0
+  - name: PlayerUI
+    uniqueID: 897816183
     locked: 0

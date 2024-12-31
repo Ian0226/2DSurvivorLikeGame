@@ -8,8 +8,10 @@ using UnityEngine.Pool;
 
 public class PlayerController : GameSystemBase
 {
-    private InputManager inputManager;
+    private InputManager inputManager = null;
     private Transform playerTransform;
+
+    private Action playerBehaviourAction = null;
 
     #region 玩家數值
 
@@ -25,6 +27,21 @@ public class PlayerController : GameSystemBase
     private int attackCDMax = 1;
     private float currentAttackCD = 0;
     private bool canAttack = false;
+
+    /// <summary>
+    /// 玩家總分數
+    /// </summary>
+    private long playerScore = 0;
+
+    /// <summary>
+    /// 玩家獲得能力三選一需要累積的分數
+    /// </summary>
+    private int playerSkillScore = 0;
+
+    /// <summary>
+    /// 玩家當前累積分數，累積到一定分數即可獲得三選一能力
+    /// </summary>
+    private int pyCurrentAccumulateScore = 0;
 
     /// <summary>
     /// 玩家血量
@@ -53,6 +70,15 @@ public class PlayerController : GameSystemBase
     private PlayerShootHandler _shootProjectileHandler = null;
 
     /// <summary>
+    /// 玩家當前擁有的技能
+    /// </summary>
+    private List<SkillBase> playerCurrentSkills = null;
+    /// <summary>
+    /// 玩家當前擁有的被動技能
+    /// </summary>
+    private List<SkillBase> playerCurrentPassiveSkills = null;
+
+    /// <summary>
     /// 玩家攻擊模式
     /// </summary>
     public enum PlayerAttackModeEnum
@@ -66,7 +92,7 @@ public class PlayerController : GameSystemBase
     /// <summary>
     /// 玩家當前使用的投射物
     /// </summary>
-    private GameObject playerCurrentProjectile = null;
+    private ProjectileBase playerCurrentProjectile = null;
 
     /// <summary>
     /// 玩家可以射的投射物數量，預設為1
@@ -75,14 +101,23 @@ public class PlayerController : GameSystemBase
 
     #endregion
 
+    private RaycastHit2D rayHitX;
+    private RaycastHit2D rayHitY;
+
+    private int boundaryLayerMask = 0;//用於檢測邊界射線的Layer Mask
+
     public bool CanAttack { get => canAttack; set => canAttack = value; }
     public Vector2 MousePos { get => mousePos;}
     public Vector2 PlayerPos { get => playerPos;}
-    public GameObject PlayerCurrentProjectile { get => playerCurrentProjectile; set => playerCurrentProjectile = value; }
+    public ProjectileBase PlayerCurrentProjectile { get => playerCurrentProjectile; set => playerCurrentProjectile = value; }
     public PlayerAttackModeEnum PlayerAttackMode { get => playerAttackMode; set => playerAttackMode = value; }
     public int ProjectilesCount { get => projectilesCount; set => projectilesCount = value; }
     public Vector2 AimDirection { get => aimDirection;}
-    public int Hp { get => hp;}
+    public int Hp { get => hp; set => hp = value; }
+    public long PlayerScore { get => playerScore;}
+    public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
+    public Action PlayerBehaviourAction { get => playerBehaviourAction; set => playerBehaviourAction = value; }
+    public int AttackCDTime { get => attackCDTime;}
 
     public PlayerController(SurvivorLikeGame2DFacade survivorLikeGame) : base(survivorLikeGame)
     {
@@ -98,14 +133,17 @@ public class PlayerController : GameSystemBase
         _shootProjectileHandler = new PlayerShootHandler(this);
 
         InitProperties();
+        InitActions();
     }
 
     public override void Update()
     {
-        SetVectors();
+        if(playerBehaviourAction != null)
+            playerBehaviourAction();
+        //SetVectors();
         
-        HandleMovement();
-        HandleLookDir();
+        //HandleMovement();
+        //HandleLookDir();
     }
 
     private void InitProperties()
@@ -115,10 +153,26 @@ public class PlayerController : GameSystemBase
         attackCDTime = 10;
         canAttack = true;
 
+        playerScore = 0;
+        playerSkillScore = 25;
+
         hp = 5;
 
-        PlayerCurrentProjectile = (GameObject)Resources.Load("Prefabs/Projectiles/DefaultProjectile");
-        
+        //Set default projectile
+        GameObject projectileObj = (GameObject)Resources.Load("Prefabs/Projectiles/DefaultProjectile");
+        playerCurrentProjectile = projectileObj.GetComponent<ProjectileBase>();
+
+        boundaryLayerMask = LayerMask.GetMask("GroundBoundary");
+
+        playerCurrentSkills = new List<SkillBase>();
+        playerCurrentPassiveSkills = new List<SkillBase>();
+    }
+
+    public void InitActions()
+    {
+        playerBehaviourAction += SetVectors;
+        playerBehaviourAction += HandleMovement;
+        playerBehaviourAction += HandleLookDir;
     }
 
     private void SetVectors()
@@ -132,8 +186,10 @@ public class PlayerController : GameSystemBase
     private void HandleMovement()
     {
         Vector2 moveDirection = new Vector2(inputManager.MoveInput.x, inputManager.MoveInput.y);
+        moveDirection = BoundaryRayHandler(moveDirection);
         Vector2 playerNewPos = PlayerPos + moveDirection * moveSpeed * Time.deltaTime;
         playerTransform.position = playerNewPos;
+
         //Debug.Log(moveDirection);
         //rb.MovePosition(playerPos + moveDirection * moveSpeed * Time.deltaTime);
     }
@@ -146,6 +202,47 @@ public class PlayerController : GameSystemBase
 
         //Debug.Log(inputManager.LookInput.x + " " + inputManager.LookInput.y);
         //playerTransform.up = (target - playerPos).normalized;
+    }
+
+    private Vector2 BoundaryRayHandler(Vector2 moveDirection)
+    {
+        //Debug.Log(inputManager.MoveInput);
+        if(inputManager.MoveInput.x > 0)
+        {
+            //Go right
+            rayHitX = Physics2D.Raycast(this.playerPos, Vector2.right, 1f, boundaryLayerMask);
+            if (rayHitX)
+                moveDirection.x = 0; 
+            Debug.DrawRay(this.playerPos, Vector2.right,Color.red);
+
+        }
+        else if(inputManager.MoveInput.x < 0)
+        {
+            //Go left
+            rayHitX = Physics2D.Raycast(this.playerPos, Vector2.left, 1f, boundaryLayerMask);
+            if (rayHitX)
+                moveDirection.x = 0;
+            Debug.DrawRay(this.playerPos, Vector2.left, Color.red);
+        }
+        if(inputManager.MoveInput.y > 0)
+        {
+            //Go up
+            rayHitY = Physics2D.Raycast(this.playerPos, Vector2.up, 1f, boundaryLayerMask);
+            if (rayHitY)
+                moveDirection.y = 0;
+            Debug.DrawRay(this.playerPos, Vector2.up, Color.red);
+        }
+        else if(inputManager.MoveInput.y < 0)
+        {
+            //Go down
+            rayHitY = Physics2D.Raycast(this.playerPos, Vector2.down, 1f, boundaryLayerMask);
+            if (rayHitY)
+                moveDirection.y = 0;
+            Debug.DrawRay(this.playerPos, Vector2.down, Color.red);
+        }
+        //boundaryDetectRay1 = new Ray2D(this.playerTransform.position,)
+
+        return moveDirection;
     }
 
     private async void CDCount()
@@ -186,15 +283,50 @@ public class PlayerController : GameSystemBase
         _shootProjectileHandler.Shoot();
     }
 
+    /// <summary>
+    /// 玩家受到攻擊
+    /// </summary>
+    /// <param name="damage"></param>
     public void TakeDamage(int damage)
     {
-        if(hp <= damage)
+        if(hp > damage)
         {
-            hp = 0;
-            Debug.Log("玩家死亡");
+            Debug.Log("受到攻擊");
+            hp -= damage;
             return;
         }
-        Debug.Log("受到攻擊");
-        hp -= damage;
+        hp = 0;
+        //Debug.Log("玩家死亡，遊戲結束");
+        PlayerDeadHandler();
+    }
+
+    /// <summary>
+    /// 添加玩家玩家分數
+    /// </summary>
+    public void SetPlayerScore(int score)
+    {
+        this.playerScore += score;
+        this.pyCurrentAccumulateScore++;
+        survivorLikeGame.SetPlayerScoreHintImgFillAmount((1f / playerSkillScore) * this.pyCurrentAccumulateScore);
+        if(this.pyCurrentAccumulateScore >= this.playerSkillScore)
+        {
+            this.pyCurrentAccumulateScore = 0;
+            survivorLikeGame.ChooseSkill();
+            //GamePause();
+            survivorLikeGame.GamePause();
+            Debug.Log("玩家獲得特殊能力");
+        }
+        //Debug.Log((1f / playerSkillScore) * this.playerScore);
+    }
+
+    /// <summary>
+    /// 玩家死亡處理
+    /// </summary>
+    private void PlayerDeadHandler()
+    {
+        //GamePause();
+        survivorLikeGame.GamePause();
+        
+        survivorLikeGame.GameSettlement(false);
     }
 }

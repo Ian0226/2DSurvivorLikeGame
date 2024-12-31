@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine;
 public abstract class ProjectileBase : MonoBehaviour
 {
     protected SurvivorLikeGame2DFacade _survivorLikeGame = null;
+
+    protected ProjectileProp _projectileProp = null;
 
     protected int damage = 0;
     protected float speed = 0.0f;
@@ -16,11 +19,18 @@ public abstract class ProjectileBase : MonoBehaviour
     public delegate void Recycle(ProjectileBase projectile);
     public Recycle recycle;
 
+    protected Sprite projectileSprite = null;
+    protected Material projectileMat = null;
+
+    protected System.Action<EnemyBase, int> damageAction = null;
+
     public float ExistTime { get => existTime; set => existTime = value; }
+    public Action<EnemyBase, int> DamageAction { get => damageAction; set => damageAction = value; }
 
     private void Start()
     {
         Intialize();
+        InitProperties();
     }
 
     public virtual void Update()
@@ -40,8 +50,13 @@ public abstract class ProjectileBase : MonoBehaviour
 
         rb = this.GetComponent<Rigidbody2D>();
 
-        damage = 1;
+        SpriteRenderer pSpriteRenderer = this.GetComponent<SpriteRenderer>();
+
+        projectileSprite = pSpriteRenderer.sprite;
+        projectileMat = pSpriteRenderer.material;
     }
+
+    public virtual void InitProperties() { }
 
     public virtual void Move() 
     {
@@ -54,4 +69,6 @@ public abstract class ProjectileBase : MonoBehaviour
         moveDir = dir;
         this.transform.rotation = Quaternion.FromToRotation(Vector3.up, dir);
     }
+
+    public virtual void DamageFunc(EnemyBase tagetEnemy, int damage) { }
 }

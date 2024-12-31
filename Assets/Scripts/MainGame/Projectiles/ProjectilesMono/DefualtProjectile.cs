@@ -7,10 +7,16 @@ public class DefualtProjectile : ProjectileBase
     public override void Intialize()
     {
         base.Intialize();
+    }
 
-        this.speed = 0.7f;
-        this.existTime = 1f;
-        
+    public override void InitProperties()
+    {
+        this._projectileProp = (ProjectileProp)Resources.Load("ScriptableObject/Projectiles/Projectile_Default");
+        this.damage = _projectileProp.damage;
+        this.speed = _projectileProp.speed;
+        this.existTime = _projectileProp.existTime;
+
+        damageAction = DamageFunc;
     }
 
     public override void Update()
@@ -28,10 +34,20 @@ public class DefualtProjectile : ProjectileBase
         switch(collision.gameObject.tag)
         {
             case "Enemy":
-                _survivorLikeGame.GetCurrentInGameEnemies(System.Int32.Parse(collision.gameObject.name.Split("_")[1]))
-                    .TakeDamage(this.damage);
+                damageAction(_survivorLikeGame.GetCurrentInGameEnemies(System.Int32.Parse(collision.gameObject.name.Split("_")[1])),
+                    this.damage);
                 existTime = 0;//銷毀子彈
                 break;
         }
+    }
+
+    /// <summary>
+    /// 預設攻擊模式
+    /// </summary>
+    /// <param name="tagetEnemy"></param>
+    /// <param name="damage"></param>
+    public override void DamageFunc(EnemyBase tagetEnemy, int damage)
+    {
+        tagetEnemy.TakeDamage(this.damage);
     }
 }

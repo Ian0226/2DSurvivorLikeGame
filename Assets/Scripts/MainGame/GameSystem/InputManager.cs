@@ -38,8 +38,13 @@ public class InputManager : GameSystemBase
         survivorLikeGame.HandleAttack();
     }
 
+    public void EnableInputManager()
+    {
+        inputActions.Enable();
+    }
+
     public override void Release()
     {
-        //inputActions.Disable();
+        inputActions.Disable();
     }
 }

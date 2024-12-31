@@ -1,0 +1,109 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Unity.CustomTool;
+using DG.Tweening;
+using UnityEngine.UI;
+using TMPro;
+
+public class ChooseSkillUI : UserInterface
+{
+    private GameObject chooseSkillCanvas = null;
+    private RectTransform chooseSkillPanel = null;
+
+    private SkillManager _skillManager = null;
+
+    private Button skillSelectionBtn01 = null;
+    private Button skillSelectionBtn02 = null;
+    private Button skillSelectionBtn03 = null;
+
+    private Button confiromBtn = null;
+
+    private Vector2 chooseSkillPanelOriginPos;
+
+    public SkillManager SkillManager { get => _skillManager; set => _skillManager = value; }
+
+    public ChooseSkillUI(SurvivorLikeGame2DFacade survivorLikeGame) : base(survivorLikeGame)
+    {
+        Initialize();
+    }
+
+    public override void Initialize()
+    {
+        chooseSkillCanvas = UnityTool.FindGameObject("ChooseSkillUICanvas");
+        chooseSkillPanel = UITool.GetUIComponent<RectTransform>(chooseSkillCanvas, "ChooseSkillPanel");
+
+        skillSelectionBtn01 = UITool.GetUIComponent<Button>(chooseSkillPanel.gameObject, "Selection_1");
+        skillSelectionBtn02 = UITool.GetUIComponent<Button>(chooseSkillPanel.gameObject, "Selection_2");
+        skillSelectionBtn03 = UITool.GetUIComponent<Button>(chooseSkillPanel.gameObject, "Selection_3");
+
+        confiromBtn = UITool.GetUIComponent<Button>(chooseSkillPanel.gameObject, "ConfiromBtn");
+        //confiromBtn.onClick.AddListener(Release);
+
+        chooseSkillPanelOriginPos = chooseSkillPanel.anchoredPosition;
+
+        chooseSkillCanvas.SetActive(false);
+    }
+
+    public override void Update()
+    {
+
+    }
+
+    public override void Show()
+    {
+        chooseSkillCanvas.SetActive(true);
+        HandleUIAnimation();
+    }
+    
+    public void HandleUIAnimation()
+    {
+        RandomSkills();
+        if (chooseSkillCanvas.gameObject.activeInHierarchy)
+            chooseSkillPanel.DOAnchorPosY(0, 0.45f).SetUpdate(true);
+    }
+
+    /// <summary>
+    /// 隨機選取三項技能，並呼叫設定UI的方法將技能顯示於UI上
+    /// </summary>
+    private void RandomSkills()
+    {
+        if (_skillManager.AllSkillContainerList.Count < 3) return;
+
+        List<int> randomNum = new List<int>();
+        for(int i = 0; i < 3; i++)//產生三個隨機數
+        {
+            int r = Random.Range(0, _skillManager.AllSkillContainerList.Count);
+            while(randomNum.Contains(r))
+            {
+                r = Random.Range(0, _skillManager.AllSkillContainerList.Count);
+            }
+            randomNum.Add(r);
+        }
+        //skillSelectionBtn01.onClick.AddListener(skillManager.AllSkillContainerList[0].UseSkill);//Test
+        SetButtonUI(skillSelectionBtn01, _skillManager.AllSkillContainerList[randomNum[0]].UseSkill,
+            _skillManager.AllSkillContainerList[randomNum[0]].SkillName);
+        SetButtonUI(skillSelectionBtn02, _skillManager.AllSkillContainerList[randomNum[1]].UseSkill,
+            _skillManager.AllSkillContainerList[randomNum[1]].SkillName);
+        SetButtonUI(skillSelectionBtn03, _skillManager.AllSkillContainerList[randomNum[2]].UseSkill,
+            _skillManager.AllSkillContainerList[randomNum[2]].SkillName);
+    }
+
+    private void SetButtonUI(Button btn,System.Action onClickAction,string showText)
+    {
+        btn.onClick.AddListener( () => { 
+            onClickAction.Invoke();
+            Release();
+        });
+        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = showText;
+    }
+
+    public override void Release()
+    {
+        chooseSkillPanel.DOAnchorPosY(0, chooseSkillPanelOriginPos.y).SetUpdate(true).
+            OnComplete(() => {
+                chooseSkillCanvas.SetActive(false);
+                survivorLikeGame.GameContinue();
+            });
+    }
+}
