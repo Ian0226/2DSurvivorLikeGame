@@ -37,7 +37,7 @@ public class ChooseSkillUI : UserInterface
         skillSelectionBtn02 = UITool.GetUIComponent<Button>(chooseSkillPanel.gameObject, "Selection_2");
         skillSelectionBtn03 = UITool.GetUIComponent<Button>(chooseSkillPanel.gameObject, "Selection_3");
 
-        confiromBtn = UITool.GetUIComponent<Button>(chooseSkillPanel.gameObject, "ConfiromBtn");
+        //confiromBtn = UITool.GetUIComponent<Button>(chooseSkillPanel.gameObject, "ConfiromBtn");
         //confiromBtn.onClick.AddListener(Release);
 
         chooseSkillPanelOriginPos = chooseSkillPanel.anchoredPosition;
@@ -56,7 +56,7 @@ public class ChooseSkillUI : UserInterface
         HandleUIAnimation();
     }
     
-    public void HandleUIAnimation()
+    private void HandleUIAnimation()
     {
         RandomSkills();
         if (chooseSkillCanvas.gameObject.activeInHierarchy)
@@ -91,6 +91,7 @@ public class ChooseSkillUI : UserInterface
 
     private void SetButtonUI(Button btn,System.Action onClickAction,string showText)
     {
+        btn.onClick.RemoveAllListeners();//清除上一次的Action紀錄
         btn.onClick.AddListener( () => { 
             onClickAction.Invoke();
             Release();
@@ -100,7 +101,7 @@ public class ChooseSkillUI : UserInterface
 
     public override void Release()
     {
-        chooseSkillPanel.DOAnchorPosY(0, chooseSkillPanelOriginPos.y).SetUpdate(true).
+        chooseSkillPanel.DOAnchorPosY(chooseSkillPanelOriginPos.y, 0.45f).SetUpdate(true).
             OnComplete(() => {
                 chooseSkillCanvas.SetActive(false);
                 survivorLikeGame.GameContinue();

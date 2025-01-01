@@ -14,6 +14,8 @@ public class DefaultEnemy : EnemyBase
         this.damage = 1;
         this.hp = 1;
 
+        this.deadEffectObj = (GameObject)Resources.Load("Prefabs/Enemy/Particles/DefaultEnemyDeadParticle");
+
         this.rewardScore = 1;
 
         targetPlayer = UnityTool.FindGameObject("Player").transform;
@@ -45,11 +47,20 @@ public class DefaultEnemy : EnemyBase
         if(hp <= damage)//死亡
         {
             hp = 0;
-            recycle(this);
-            _survivorLikeGame.SetPlayerScore(this.rewardScore);
+            HandleDeath();
             return;
         }
         hp -= damage;
+    }
+
+    /// <summary>
+    /// 處理死亡
+    /// </summary>
+    public override void HandleDeath()
+    {
+        recycle(this);
+        _survivorLikeGame.SetPlayerScore(this.rewardScore);
+        _survivorLikeGame.CreateParticle(this.deadEffectObj, this.transform.position);
     }
 
     /// <summary>

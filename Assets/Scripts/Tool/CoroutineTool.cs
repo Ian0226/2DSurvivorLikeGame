@@ -5,7 +5,7 @@ using UnityEngine;
 public class CoroutineTool : MonoBehaviour
 {
     private static CoroutineTool _instance;
-    private static CoroutineTool Instance
+    public static CoroutineTool Instance
     {
         get
         {
@@ -17,9 +17,6 @@ public class CoroutineTool : MonoBehaviour
             return _instance;
         }
     }
-
-    private static long timeSecond = 0;
-    public static long TimeSecond { get => timeSecond; }
 
     public static void ExcuteInvokeRepeatInsEnemy(System.Action repeatAction, float intervalTime)
     {
@@ -46,8 +43,23 @@ public class CoroutineTool : MonoBehaviour
         while (true)
         {
             repeatAction.Invoke();
-            timeSecond++;
             yield return new WaitForSeconds(1);
         }
+    }
+
+    /// <summary>
+    /// ©µ¿ð°õ¦æ¤@­ÓAction
+    /// </summary>
+    /// <param name="action"></param>
+    /// <param name="delayTime"></param>
+    public void DelayExcuteAction(System.Action action, float delayTime)
+    {
+        StartCoroutine(ExcuteAction(action, delayTime));
+    }
+
+    private IEnumerator ExcuteAction(System.Action action, float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        action.Invoke();
     }
 }

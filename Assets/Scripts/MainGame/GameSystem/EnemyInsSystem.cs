@@ -31,6 +31,8 @@ public class EnemyInsSystem : GameSystemBase
     private int insIndex;
     private Vector2 insPos;
 
+    private Vector2 enemyDeadPos;
+
     /// <summary>
     /// ¼Ä¤Hª«¥ó¦À
     /// </summary>
@@ -75,7 +77,7 @@ public class EnemyInsSystem : GameSystemBase
             {
                 GameObject.Destroy(enemy.gameObject);
             },true,50,1000
-            );
+        );
     }
 
     public override void Update()

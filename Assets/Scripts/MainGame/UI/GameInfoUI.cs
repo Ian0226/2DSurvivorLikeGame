@@ -28,7 +28,7 @@ public class GameInfoUI : UserInterface
     public override void Update()
     {
         testGameInfoText.text = "Wave : " + survivorLikeGame.GetCurrentWave() + " "
-            + (CoroutineTool.TimeSecond / 60).ToString("d2") + " : " + (CoroutineTool.TimeSecond % 60).ToString("d2");
+            + (survivorLikeGame.GetGameTime() / 60).ToString("d2") + " : " + (survivorLikeGame.GetGameTime() % 60).ToString("d2");
 
         playerHPText.text = survivorLikeGame.GetPlayerHP().ToString();
 

@@ -9,6 +9,7 @@ public abstract class ProjectileBase : MonoBehaviour
 
     protected ProjectileProp _projectileProp = null;
 
+    protected string projectileName = "";
     protected int damage = 0;
     protected float speed = 0.0f;
     protected float existTime = 0.0f;
@@ -26,6 +27,7 @@ public abstract class ProjectileBase : MonoBehaviour
 
     public float ExistTime { get => existTime; set => existTime = value; }
     public Action<EnemyBase, int> DamageAction { get => damageAction; set => damageAction = value; }
+    public string ProjectileName { get => projectileName; }
 
     private void Start()
     {

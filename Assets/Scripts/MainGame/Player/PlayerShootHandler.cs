@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using Unity.CustomTool;
 
 /// <summary>
 /// 該類別負責處理玩家射擊
@@ -13,6 +14,8 @@ public class PlayerShootHandler
     /// 子彈物件池
     /// </summary>
     private ObjectPool<ProjectileBase> projectilePool = null;
+
+    private AudioSource shootAudio = null;
 
     public PlayerShootHandler(PlayerController playerController)
     {
@@ -48,11 +51,18 @@ public class PlayerShootHandler
             {
                 GameObject.Destroy(projectile.gameObject);
             }, true, 100, 10000 //預設Pool容量100，最大上限10000
-            );
+        );
+
+        //初始化音效
+        shootAudio = UnityTool.FindChildGameObject(_playerController.PlayerTransform.gameObject, "PlayerShootAudio").
+            GetComponent<AudioSource>();
+        shootAudio.clip = (AudioClip)Resources.Load($"AudioClips/Projectiles/Audio_{_playerController.PlayerCurrentProjectile.name}");
     }
 
     public void Shoot()
     {
+        shootAudio.PlayOneShot(shootAudio.clip);
+
         switch (_playerController.PlayerAttackMode)
         {
             case PlayerController.PlayerAttackModeEnum.projectile:

@@ -24,11 +24,13 @@ public class SurvivorLikeGame2DFacade
     private WaveSystem _waveSystem = null;
     private GameResultHandler _gameResultHandler = null;
     private ChooseSkillSystem _chooseSkillSystem = null;
-    private GameTimeManager _gameTimeManager = null;
+    private MainGameManager _mainGameManager = null;
+    private ParticleSystemManager _particleSystemManager = null;
 
     //UI class
     private FollowPlayerHintUI _followPlayerHintUI = null;
     private GameInfoUI _gameInfoUI = null;
+    private GameResultUI _gameResultUI = null;
 
     #endregion
 
@@ -41,11 +43,13 @@ public class SurvivorLikeGame2DFacade
         _waveSystem = new WaveSystem(this);
         _gameResultHandler = new GameResultHandler(this);
         _chooseSkillSystem = new ChooseSkillSystem(this);
-        _gameTimeManager = new GameTimeManager(this);
+        _mainGameManager = new MainGameManager(this);
+        _particleSystemManager = new ParticleSystemManager(this);
 
         //UI
         _followPlayerHintUI = new FollowPlayerHintUI(this);
         _gameInfoUI = new GameInfoUI(this);
+        _gameResultUI = new GameResultUI(this);
     }
 
     public void Update()
@@ -220,6 +224,7 @@ public class SurvivorLikeGame2DFacade
         return _enemyInsSystem.GetEnemyInEnemies(index);
     }
 
+    //Wave System
     /// <summary>
     /// 獲取當前波數
     /// </summary>
@@ -230,13 +235,22 @@ public class SurvivorLikeGame2DFacade
     }
 
     /// <summary>
+    /// 獲取當前遊戲時間
+    /// </summary>
+    /// <returns></returns>
+    public int GetGameTime()
+    {
+        return _waveSystem.GameTime;
+    }
+
+    /// <summary>
     /// 遊戲結算
     /// </summary>
     /// <param name="gameWin"></param>
-    public void GameSettlement(bool gameWin)
+    public void GameSettlement(GameResult result)
     {
         if (_gameResultHandler != null)
-            _gameResultHandler.GameSettlement(gameWin);
+            _gameResultHandler.GameSettlement(result);
     }
 
     /// <summary>
@@ -248,13 +262,14 @@ public class SurvivorLikeGame2DFacade
             _chooseSkillSystem.ChooseSkill();
     }
 
+    //MainGameManager
     /// <summary>
     /// 遊戲暫停
     /// </summary>
     public void GamePause()
     {
-        if (_gameTimeManager != null)
-            _gameTimeManager.GamePause();
+        if (_mainGameManager != null)
+            _mainGameManager.GamePause();
     }
 
     /// <summary>
@@ -262,8 +277,39 @@ public class SurvivorLikeGame2DFacade
     /// </summary>
     public void GameContinue()
     {
-        if (_gameTimeManager != null)
-            _gameTimeManager.GameContinue();
+        if (_mainGameManager != null)
+            _mainGameManager.GameContinue();
+    }
+
+    //Game result ui 
+    /// <summary>
+    /// 顯示遊戲結束UI
+    /// </summary>
+    public void ShowGameResultUI()
+    {
+        if (_gameResultUI != null)
+            _gameResultUI.Show();
+    }
+
+    /// <summary>
+    /// 設定遊戲結果至UI
+    /// </summary>
+    /// <param name="result"></param>
+    public void SetGameResultUI(GameResult result)
+    {
+        if (_gameResultUI != null)
+            _gameResultUI.SetGameResult(result);
+    }
+
+    /// <summary>
+    /// 創建Particle
+    /// </summary>
+    /// <param name="particleObj"></param>
+    /// <param name="insPos"></param>
+    public void CreateParticle(GameObject particleObj, Vector2 insPos)
+    {
+        if (_particleSystemManager != null)
+            _particleSystemManager.CreateParticle(particleObj, insPos);
     }
     #endregion
 }

@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 處理遊戲暫停與開始
+/// 處理遊戲流程如暫停、開始
 /// </summary>
-public class GameTimeManager : GameSystemBase
+public class MainGameManager : GameSystemBase
 {
-    public GameTimeManager(SurvivorLikeGame2DFacade survivorLikeGame) : base(survivorLikeGame)
+    private bool gameWin = false;
+    private long score = 0;
+    private int gameTime = 0;
+
+    public bool GameWin { get => gameWin; set => gameWin = value; }
+    public long Score { get => score; set => score = value; }
+    public int GameTime { get => gameTime; set => gameTime = value; }
+
+    public MainGameManager(SurvivorLikeGame2DFacade survivorLikeGame) : base(survivorLikeGame)
     {
         Initialize();
     }
@@ -36,4 +44,5 @@ public class GameTimeManager : GameSystemBase
         survivorLikeGame.GetInputManager().EnableInputManager();
         Time.timeScale = 1;
     }
+
 }

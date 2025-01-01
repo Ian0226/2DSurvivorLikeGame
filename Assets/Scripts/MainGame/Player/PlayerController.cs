@@ -118,6 +118,7 @@ public class PlayerController : GameSystemBase
     public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
     public Action PlayerBehaviourAction { get => playerBehaviourAction; set => playerBehaviourAction = value; }
     public int AttackCDTime { get => attackCDTime;}
+    public Transform PlayerTransform { get => playerTransform;}
 
     public PlayerController(SurvivorLikeGame2DFacade survivorLikeGame) : base(survivorLikeGame)
     {
@@ -130,9 +131,10 @@ public class PlayerController : GameSystemBase
 
         playerTransform = UnityTool.FindGameObject("Player").transform;
 
+        InitProperties();
+
         _shootProjectileHandler = new PlayerShootHandler(this);
 
-        InitProperties();
         InitActions();
     }
 
@@ -326,7 +328,15 @@ public class PlayerController : GameSystemBase
     {
         //GamePause();
         survivorLikeGame.GamePause();
-        
-        survivorLikeGame.GameSettlement(false);
+        survivorLikeGame.GameSettlement(SetGameResultInfo());//©I¥s¹CÀ¸µ²ºâ
+    }
+
+    private GameResult SetGameResultInfo()
+    {
+        GameResult gameResult;
+        gameResult.Score = this.playerScore;
+        gameResult.GameTime = survivorLikeGame.GetGameTime();
+
+        return gameResult;
     }
 }

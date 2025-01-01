@@ -20,6 +20,7 @@ public class WaveSystem : GameSystemBase
         Initialize();
     }
 
+    public int GameTime { get => gameTime; set => gameTime = value; }
     public int Wave { get => wave; set => wave = value; }
 
     public override void Initialize()
@@ -45,7 +46,8 @@ public class WaveSystem : GameSystemBase
 
     private void GameWaveHandler()
     {
-        if(CoroutineTool.TimeSecond % 60 == 0)
+        gameTime++;
+        if(gameTime % 60 == 0)
         {
             wave++;
         }

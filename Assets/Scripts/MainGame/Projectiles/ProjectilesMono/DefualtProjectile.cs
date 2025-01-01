@@ -12,6 +12,7 @@ public class DefualtProjectile : ProjectileBase
     public override void InitProperties()
     {
         this._projectileProp = (ProjectileProp)Resources.Load("ScriptableObject/Projectiles/Projectile_Default");
+        this.projectileName = _projectileProp.projectileName;
         this.damage = _projectileProp.damage;
         this.speed = _projectileProp.speed;
         this.existTime = _projectileProp.existTime;

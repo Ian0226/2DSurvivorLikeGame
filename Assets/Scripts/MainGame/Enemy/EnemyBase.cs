@@ -19,10 +19,16 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected Transform targetPlayer = null;
 
+    /// <summary>
+    /// 死亡特效
+    /// </summary>
+    protected GameObject deadEffectObj = null;
+
     public delegate void Recycle(EnemyBase enemy);
     public Recycle recycle;
 
     public string EnemyName { get => enemyName;}
+    public GameObject DeadEffectObj { get => deadEffectObj;}
 
     private void Start()
     {
@@ -49,6 +55,8 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected abstract void AttackPlayer();
     public abstract void TakeDamage(int damage);
+
+    public abstract void HandleDeath();
 
     //附加異常(疾病)狀態
     public abstract void TakeAilmentsDamage(System.Action stateAction);

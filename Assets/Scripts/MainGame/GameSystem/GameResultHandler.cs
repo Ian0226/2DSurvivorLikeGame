@@ -17,15 +17,24 @@ public class GameResultHandler : GameSystemBase
     /// <summary>
     /// 進行遊戲結算
     /// </summary>
-    public void GameSettlement(bool gameWin)
+    public void GameSettlement(GameResult result)
     {
-        if (gameWin)
-        {
-            Debug.Log("遊戲結束，勝利");
-        }
-        else
-        {
-            Debug.Log("遊戲結束，失敗");
-        }
+        GameEnd(result);
     }
+
+    /// <summary>
+    /// 遊戲結束
+    /// </summary>
+    private void GameEnd(GameResult gameResult)
+    {
+        survivorLikeGame.SetGameResultUI(gameResult);
+        survivorLikeGame.ShowGameResultUI();
+    }
+}
+
+public struct GameResult
+{
+    public long Score;
+    public int GameTime;
+    //Own Skills
 }
