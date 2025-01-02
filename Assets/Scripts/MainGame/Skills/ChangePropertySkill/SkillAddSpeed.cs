@@ -24,8 +24,14 @@ public class SkillAddSpeed : SkillBase
         AddSpeedSkillHandler();
 
         if (this.skillLevel < this.skillMaxLevel)
+        {
             this.skillLevel++;
-        this.skillName = $"增加速度_L{this.skillLevel}";
+            this.skillName = $"增加速度_L{this.skillLevel}";
+        }
+        else
+        {
+            this.skillName = $"增加速度_Max";
+        }
     }
 
     private void AddSpeedSkillHandler()

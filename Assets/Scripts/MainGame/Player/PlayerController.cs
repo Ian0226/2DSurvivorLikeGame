@@ -8,7 +8,6 @@ using UnityEngine.Pool;
 
 public class PlayerController : GameSystemBase
 {
-    private InputManager inputManager = null;
     private Transform playerTransform;
 
     private Action playerBehaviourAction = null;
@@ -50,6 +49,7 @@ public class PlayerController : GameSystemBase
 
     #endregion
 
+    #region Vectors
     /// <summary>
     /// 玩家游標位置
     /// </summary>
@@ -64,11 +64,9 @@ public class PlayerController : GameSystemBase
     /// 玩家瞄準位置
     /// </summary>
     private Vector2 aimDirection;
+    #endregion
 
     #region 攻擊相關
-
-    private PlayerShootHandler _shootProjectileHandler = null;
-
     /// <summary>
     /// 玩家當前擁有的技能
     /// </summary>
@@ -100,6 +98,11 @@ public class PlayerController : GameSystemBase
     private int projectilesCount = 1;
 
     #endregion
+
+    //類別成員
+    private InputManager inputManager = null;
+    private PlayerEffectHandler _playerEffectHandler = null;
+    private PlayerShootHandler _shootProjectileHandler = null;
 
     private RaycastHit2D rayHitX;
     private RaycastHit2D rayHitY;
@@ -134,16 +137,19 @@ public class PlayerController : GameSystemBase
         InitProperties();
 
         _shootProjectileHandler = new PlayerShootHandler(this);
-
+        _playerEffectHandler = new PlayerEffectHandler(this);
         InitActions();
+
     }
 
     public override void Update()
     {
         if(playerBehaviourAction != null)
             playerBehaviourAction();
+
+        _playerEffectHandler.Update();
         //SetVectors();
-        
+
         //HandleMovement();
         //HandleLookDir();
     }
@@ -208,6 +214,7 @@ public class PlayerController : GameSystemBase
 
     private Vector2 BoundaryRayHandler(Vector2 moveDirection)
     {
+        _playerEffectHandler.SetParticleVelocity(moveDirection);
         //Debug.Log(inputManager.MoveInput);
         if(inputManager.MoveInput.x > 0)
         {
@@ -216,7 +223,6 @@ public class PlayerController : GameSystemBase
             if (rayHitX)
                 moveDirection.x = 0; 
             Debug.DrawRay(this.playerPos, Vector2.right,Color.red);
-
         }
         else if(inputManager.MoveInput.x < 0)
         {
@@ -294,6 +300,7 @@ public class PlayerController : GameSystemBase
         if(hp > damage)
         {
             Debug.Log("受到攻擊");
+            _playerEffectHandler.PlayerTakeDamageEffect();
             hp -= damage;
             return;
         }

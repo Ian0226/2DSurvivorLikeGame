@@ -23,8 +23,14 @@ public class SkillAddHp : SkillBase
     {
         AddHpSkillHandler();
         if(this.skillLevel < this.skillMaxLevel)
+        {
             this.skillLevel++;
-        this.skillName = $"增加血量_L{this.skillLevel}";
+            this.skillName = $"增加血量_L{this.skillLevel}";
+        }
+        else
+        {
+            this.skillName = $"增加血量_Max";
+        }    
     }
 
     private void AddHpSkillHandler()

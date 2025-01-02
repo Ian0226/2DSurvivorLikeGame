@@ -8,8 +8,10 @@ public abstract class SkillBase
     protected string skillName = "";
     protected int skillLevel = 0;
     protected int skillMaxLevel = 0;
+    protected bool canChooseThisSkill = true;
 
     public string SkillName { get => skillName;}
+    public bool CanChooseThisSkill { get => canChooseThisSkill;}
 
     public SkillBase(PlayerController playerController)
     {

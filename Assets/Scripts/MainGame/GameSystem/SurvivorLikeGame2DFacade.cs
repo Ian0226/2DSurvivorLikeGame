@@ -311,5 +311,7 @@ public class SurvivorLikeGame2DFacade
         if (_particleSystemManager != null)
             _particleSystemManager.CreateParticle(particleObj, insPos);
     }
+
+
     #endregion
 }

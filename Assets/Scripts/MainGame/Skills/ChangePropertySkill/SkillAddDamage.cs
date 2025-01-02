@@ -34,9 +34,16 @@ public class SkillAddDamage : SkillBase
         Debug.Log("選中技能 : 附加攻擊力_L1");
         AddSkillHandler();
 
-        if(this.skillLevel < this.skillMaxLevel)
+        if (this.skillLevel < this.skillMaxLevel)
+        {
             this.skillLevel++;
-        this.skillName = $"附加攻擊力_L{this.skillLevel}";
+            this.skillName = $"附加攻擊力_L{this.skillLevel}";
+        }   
+        else
+        {
+            this.skillName = $"附加攻擊力_Max";
+            this.canChooseThisSkill = false;
+        }
     }
 
     /// <summary>

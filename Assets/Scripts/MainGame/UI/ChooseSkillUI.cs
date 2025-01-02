@@ -92,11 +92,15 @@ public class ChooseSkillUI : UserInterface
     private void SetButtonUI(Button btn,System.Action onClickAction,string showText)
     {
         btn.onClick.RemoveAllListeners();//清除上一次的Action紀錄
+        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = showText;
+        if (showText.Contains("_Max"))//技能等級已達最大值
+            return;
+
         btn.onClick.AddListener( () => { 
             onClickAction.Invoke();
             Release();
         });
-        btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = showText;
+        
     }
 
     public override void Release()
