@@ -11,7 +11,7 @@ public class MainGameState : SceneState
 
     public override void StateBegin()
     {
-
+        
     }
 
     public override void StateUpdate()

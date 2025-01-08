@@ -30,12 +30,19 @@ public class InputManager : GameSystemBase
         //inputActions.Player.Look.canceled += _ => LookInput = Vector2.zero;
 
         inputActions.Player.Attack.performed += ctx => OnClick();
+        inputActions.Player.Attack.canceled += ctx => OnRelease();
         //inputActions.Player.Attack.canceled += ctx => IsAttack = false;
     }
 
     public void OnClick()
     {
-        survivorLikeGame.HandleAttack();
+        //survivorLikeGame.HandleAttack();
+        survivorLikeGame.SetPlayerAttackState(true);
+    }
+
+    public void OnRelease()
+    {
+        survivorLikeGame.SetPlayerAttackState(false);
     }
 
     public void EnableInputManager()

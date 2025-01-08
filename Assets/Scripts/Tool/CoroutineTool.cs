@@ -18,9 +18,19 @@ public class CoroutineTool : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 循環執行生成敵人函式
+    /// </summary>
+    /// <param name="repeatAction"></param>
+    /// <param name="intervalTime"></param>
     public static void ExcuteInvokeRepeatInsEnemy(System.Action repeatAction, float intervalTime)
     {
         Instance.StartCoroutine(InvokeRepeatInsEnemy(repeatAction,intervalTime));
+    }
+
+    public static void StopInsEnemyCoroutine()
+    {
+        Instance.StopCoroutine("InvokeRepeatInsEnemy");
     }
 
     public static void ExcuteTimer(System.Action repeatAction)

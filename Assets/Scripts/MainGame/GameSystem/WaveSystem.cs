@@ -13,6 +13,8 @@ public class WaveSystem : GameSystemBase
     private int insEnemyTypeIndex = 0;
     private float insWeight = 0.0f;
 
+    private int insEnemyCount = 0;
+
     private Action insEnemyAction;
     private Action gameFlowAction;
     public WaveSystem(SurvivorLikeGame2DFacade survivorLikeGame) : base(survivorLikeGame)
@@ -25,12 +27,14 @@ public class WaveSystem : GameSystemBase
 
     public override void Initialize()
     {
-        wave = 0;
+        wave = 1;
         //waveTime = 60;
         waveTime = 10;//Test
         insEnemyInterval = 1;
 
         insEnemyTypeIndex = 1;
+
+        insEnemyCount = 2;//每次生成敵人的數量
 
         insEnemyAction = InsEnemyAction_01;
         gameFlowAction = GameWaveHandler;
@@ -50,8 +54,8 @@ public class WaveSystem : GameSystemBase
         if(gameTime % 60 == 0)
         {
             wave++;
+            HandleWave();
         }
-        HandleWave();
     }
 
     /// <summary>
@@ -61,20 +65,50 @@ public class WaveSystem : GameSystemBase
     {
         switch (wave)
         {
+            case 2:
+                CoroutineTool.StopInsEnemyCoroutine();
+                insEnemyCount += 2;//生成敵人數量增加
+                //insEnemyAction += InsEnemyAction_02;//生成等級2敵人
+                CoroutineTool.ExcuteInvokeRepeatInsEnemy(insEnemyAction, this.insEnemyInterval);
+                break;
             case 3:
-                //第3波開始，每5波敵人速度增加0.1，最大增加到1(暫定)。
+                //第3波開始，每5波敵人速度增加0.1，最大增加到1(暫定)。生成新種類敵人。
+                CoroutineTool.StopInsEnemyCoroutine();
+                insEnemyAction += InsEnemyAction_02;//生成等級2敵人
+                CoroutineTool.ExcuteInvokeRepeatInsEnemy(insEnemyAction, this.insEnemyInterval);
                 break;
             case 5:
-                //第5波開始，敵人生成速度加快，每3波增加0.5f。每次生成敵人數量更改為2。
+                //第5波開始，敵人生成速度加快，每3波增加0.5f。每次生成敵人數量加2。
                 break;
             case 7:
-                //第7波開始，生成新種類的敵人。
+                //
                 break;
         }
     }
 
+    /// <summary>
+    /// 生成敵人
+    /// </summary>
     private void InsEnemyAction_01()
     {
-        survivorLikeGame.InsEnemy();
+        for (int i = 0; i < insEnemyCount; i++)
+            survivorLikeGame.InsEnemy(0);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void InsEnemyAction_02()
+    {
+        for (int i = 0; i < insEnemyCount; i++)
+            survivorLikeGame.InsEnemy(1);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void InsEnemyAction_03()
+    {
+        survivorLikeGame.InsEnemy(0);
     }
 }

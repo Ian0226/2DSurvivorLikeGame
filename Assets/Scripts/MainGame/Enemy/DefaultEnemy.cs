@@ -7,20 +7,10 @@ public class DefaultEnemy : EnemyBase
 {
     public override void Initialize()
     {
-        _survivorLikeGame = SurvivorLikeGame2DFacade.Instance;
-
-        this.enemyName = "DefaultEnemy";
-        this.speed = 4.9f;
-        this.damage = 1;
-        this.hp = 1;
-
-        this.deadEffectObj = (GameObject)Resources.Load("Prefabs/Enemy/Particles/DefaultEnemyDeadParticle");
-
-        this.rewardScore = 1;
-
-        targetPlayer = UnityTool.FindGameObject("Player").transform;
-
+        base.Initialize();
     }
+
+
     public override void FollowPlayer()
     {
         base.FollowPlayer();
@@ -51,6 +41,12 @@ public class DefaultEnemy : EnemyBase
             return;
         }
         hp -= damage;
+        HandleOnDamageEffect();
+    }
+
+    protected override void HandleOnDamageEffect()
+    {
+        
     }
 
     /// <summary>

@@ -12,12 +12,12 @@ public class MenuState : SceneState
 
     public override void StateBegin()
     {
-
+        MainMenuHandler.Instance.Initailize();
     }
 
     public override void StateUpdate()
     {
-
+        MainMenuHandler.Instance.Update();
     }
 
     public override void StateEnd()

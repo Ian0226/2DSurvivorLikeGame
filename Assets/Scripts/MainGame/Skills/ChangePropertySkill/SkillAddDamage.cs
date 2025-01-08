@@ -71,7 +71,7 @@ public class SkillAddDamage : SkillBase
     /// <param name="damage"></param>
     private void DamageFunc2(EnemyBase targetEnemy, int damage)
     {
-        targetEnemy.TakeDamage(damage + (addDamage+=2));
+        targetEnemy.TakeDamage(damage + (addDamage+=20));
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ public class SkillAddDamage : SkillBase
     /// <param name="damage"></param>
     private void DamageFunc3(EnemyBase targetEnemy, int damage)
     {
-        targetEnemy.TakeDamage(damage + (addDamage+=5));
+        targetEnemy.TakeDamage(damage + (addDamage+=50));
     }
 
     public void SkillUpdate() { }

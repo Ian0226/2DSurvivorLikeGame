@@ -35,7 +35,7 @@ public class DefualtProjectile : ProjectileBase
         switch(collision.gameObject.tag)
         {
             case "Enemy":
-                damageAction(_survivorLikeGame.GetCurrentInGameEnemies(System.Int32.Parse(collision.gameObject.name.Split("_")[1])),
+                damageAction(_survivorLikeGame.GetCurrentInGameEnemies(System.Int32.Parse(collision.gameObject.name.Split("(")[1])),
                     this.damage);
                 existTime = 0;//¾P·´¤l¼u
                 break;

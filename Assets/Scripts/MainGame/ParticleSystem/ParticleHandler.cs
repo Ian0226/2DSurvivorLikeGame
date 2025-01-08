@@ -10,10 +10,6 @@ public class ParticleHandler : MonoBehaviour
     public void Initialize()
     {
         this.GetComponent<ParticleSystem>().Play();
-    }
-
-    private void Start()
-    {
-        CoroutineTool.Instance.DelayExcuteAction(() => { recycle(this); }, 2f);
+        CoroutineTool.Instance.DelayExcuteAction(() => { recycle(this); }, 1.5f);
     }
 }

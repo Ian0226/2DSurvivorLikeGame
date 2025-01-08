@@ -30,6 +30,6 @@ public class SkillManager
         allSkillContainerList.Add(new SkillAddDamage(_playerController));
         allSkillContainerList.Add(new SkillAddHp(_playerController));
         allSkillContainerList.Add(new SkillAddSpeed(_playerController));
-        //allSkillContainerList.Add()
+        allSkillContainerList.Add(new SkillAddAtkSpeed(_playerController));
     }
 }

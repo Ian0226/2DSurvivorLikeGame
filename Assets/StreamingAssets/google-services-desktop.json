@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "430831995887",
+    "firebase_url": "https://dsurvivorlikegame-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "dsurvivorlikegame",
+    "storage_bucket": "dsurvivorlikegame.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430831995887:android:f52296feb1e11a2531041a",
+        "android_client_info": {
+          "package_name": "com.ian.survivorLikeGame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMfkh_dQS6mMMFVcvO9Tq2UpTUzjJsm1c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

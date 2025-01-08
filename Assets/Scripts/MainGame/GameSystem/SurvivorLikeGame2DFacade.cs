@@ -161,6 +161,15 @@ public class SurvivorLikeGame2DFacade
         _playerController.InitActions();
     }
 
+    /// <summary>
+    /// 設定玩家可否攻擊狀態
+    /// </summary>
+    /// <param name="attackState"></param>
+    public void SetPlayerAttackState(bool attackState)
+    {
+        _playerController.AttackeState = attackState;
+    }
+
     //Input Manager
     /// <summary>
     /// 獲取InputManager
@@ -208,10 +217,10 @@ public class SurvivorLikeGame2DFacade
     /// 生成敵人
     /// </summary>
     /// <param name="index"></param>
-    public void InsEnemy()
+    public void InsEnemy(int insIndex)
     {
         if(_enemyInsSystem != null)
-            _enemyInsSystem.InsEnemy();
+            _enemyInsSystem.InsEnemy(insIndex);
     }
 
     /// <summary>
@@ -311,7 +320,5 @@ public class SurvivorLikeGame2DFacade
         if (_particleSystemManager != null)
             _particleSystemManager.CreateParticle(particleObj, insPos);
     }
-
-
     #endregion
 }

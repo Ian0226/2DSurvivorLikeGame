@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d913dbf303f62544a89a66c037f15362, type: 3}
+  m_Name: DefaultEnemyL2
+  m_EditorClassIdentifier: 
+  EnemyName: DefaultEnemyL2
+  Speed: 3.3
+  Damage: 50
+  KillReward: 2
+  Hp: 20
+  DeadEffectObj: {fileID: 291090247366406063, guid: 89486bd26a750b44b86c532b312848f6, type: 3}

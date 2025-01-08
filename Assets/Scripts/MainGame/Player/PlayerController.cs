@@ -97,6 +97,11 @@ public class PlayerController : GameSystemBase
     /// </summary>
     private int projectilesCount = 1;
 
+    /// <summary>
+    /// 玩家攻擊狀態
+    /// </summary>
+    private bool attackeState = false;
+
     #endregion
 
     //類別成員
@@ -120,8 +125,9 @@ public class PlayerController : GameSystemBase
     public long PlayerScore { get => playerScore;}
     public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
     public Action PlayerBehaviourAction { get => playerBehaviourAction; set => playerBehaviourAction = value; }
-    public int AttackCDTime { get => attackCDTime;}
+    public int AttackCDTime { get => attackCDTime; set => attackCDTime = value; }
     public Transform PlayerTransform { get => playerTransform;}
+    public bool AttackeState { get => attackeState; set => attackeState = value; }
 
     public PlayerController(SurvivorLikeGame2DFacade survivorLikeGame) : base(survivorLikeGame)
     {
@@ -147,6 +153,9 @@ public class PlayerController : GameSystemBase
         if(playerBehaviourAction != null)
             playerBehaviourAction();
 
+        if(attackeState)
+            HandleAttack();
+
         _playerEffectHandler.Update();
         //SetVectors();
 
@@ -158,13 +167,13 @@ public class PlayerController : GameSystemBase
     {
         attackCDMax = 1;
         currentAttackCD = attackCDMax;
-        attackCDTime = 10;
+        attackCDTime = 7;//調整這個即可調整起始攻擊CD
         canAttack = true;
 
         playerScore = 0;
-        playerSkillScore = 25;
+        playerSkillScore = 20;
 
-        hp = 5;
+        hp = 100;
 
         //Set default projectile
         GameObject projectileObj = (GameObject)Resources.Load("Prefabs/Projectiles/DefaultProjectile");
@@ -320,6 +329,7 @@ public class PlayerController : GameSystemBase
         if(this.pyCurrentAccumulateScore >= this.playerSkillScore)
         {
             this.pyCurrentAccumulateScore = 0;
+            this.playerSkillScore += 5;//每次獲得特殊能力，下次獲得就需要更多分數
             survivorLikeGame.ChooseSkill();
             //GamePause();
             survivorLikeGame.GamePause();

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.CustomTool;
 
 public abstract class EnemyBase : MonoBehaviour
 {
@@ -40,7 +41,29 @@ public abstract class EnemyBase : MonoBehaviour
         FollowPlayer();
     }
 
-    public virtual void Initialize() { }
+    public virtual void Initialize() 
+    {
+        _survivorLikeGame = SurvivorLikeGame2DFacade.Instance;
+
+        InitProps();
+
+        targetPlayer = UnityTool.FindGameObject("Player").transform;
+    }
+    /// <summary>
+    /// 參數初始化
+    /// </summary>
+    public void InitProps()
+    {
+        DefaultEnemyProp enemyProp = (DefaultEnemyProp)Resources.Load($"ScriptableObject/Enemies/{this.gameObject.name.Split("(")[0]}");
+        this.enemyName = enemyProp.EnemyName;
+        this.speed = enemyProp.Speed;
+        this.hp = enemyProp.Hp;
+        this.damage = enemyProp.Damage;
+        this.rewardScore = enemyProp.KillReward;
+
+        this.deadEffectObj = enemyProp.DeadEffectObj;
+    }
+
     public virtual void FollowPlayer() 
     {
         this.transform.position = Vector3.MoveTowards(this.transform.position, this.targetPlayer.position, speed * Time.deltaTime);
@@ -55,6 +78,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected abstract void AttackPlayer();
     public abstract void TakeDamage(int damage);
+    protected abstract void HandleOnDamageEffect();
 
     public abstract void HandleDeath();
 

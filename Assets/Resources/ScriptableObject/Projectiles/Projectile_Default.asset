@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Projectile_Default
   m_EditorClassIdentifier: 
   projectileName: DefaultProjectile
-  damage: 1
+  damage: 10
   speed: 0.7
   existTime: 1
