@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,9 @@ using UnityEngine;
 public class MainMenuHandler
 {
     private MainMenuUI _mainMenuUI = null;
+
+    private System.Action changeSceneStateAction = null;
+
     private MainMenuHandler(){ }
 
     private static MainMenuHandler _instance = null;
@@ -16,9 +20,11 @@ public class MainMenuHandler
         }
     }
 
+    public Action ChangeSceneStateAction { get => changeSceneStateAction; set => changeSceneStateAction = value; }
+
     public void Initailize()
     {
-        _mainMenuUI = new MainMenuUI();
+        _mainMenuUI = new MainMenuUI(this);
 
         LoginHandler();
     }
@@ -31,6 +37,11 @@ public class MainMenuHandler
         {
             FirebaseManager.Instance.Logout();
         }
+    }
+
+    public void Release()
+    {
+
     }
 
     private void LoginHandler()

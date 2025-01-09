@@ -64,6 +64,11 @@ public class PlayerController : GameSystemBase
     /// 玩家瞄準位置
     /// </summary>
     private Vector2 aimDirection;
+
+    /// <summary>
+    /// 玩家移動方向
+    /// </summary>
+    private Vector2 moveDirection;
     #endregion
 
     #region 攻擊相關
@@ -128,6 +133,7 @@ public class PlayerController : GameSystemBase
     public int AttackCDTime { get => attackCDTime; set => attackCDTime = value; }
     public Transform PlayerTransform { get => playerTransform;}
     public bool AttackeState { get => attackeState; set => attackeState = value; }
+    public Vector2 MoveDirection { get => moveDirection;}
 
     public PlayerController(SurvivorLikeGame2DFacade survivorLikeGame) : base(survivorLikeGame)
     {
@@ -202,8 +208,8 @@ public class PlayerController : GameSystemBase
 
     private void HandleMovement()
     {
-        Vector2 moveDirection = new Vector2(inputManager.MoveInput.x, inputManager.MoveInput.y);
-        moveDirection = BoundaryRayHandler(moveDirection);
+        //moveDirection = new Vector2(inputManager.MoveInput.x, inputManager.MoveInput.y);
+        moveDirection = BoundaryRayHandler(new Vector2(inputManager.MoveInput.x, inputManager.MoveInput.y));
         Vector2 playerNewPos = PlayerPos + moveDirection * moveSpeed * Time.deltaTime;
         playerTransform.position = playerNewPos;
 

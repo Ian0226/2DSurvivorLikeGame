@@ -12,4 +12,6 @@ public class DefaultEnemyProp : ScriptableObject
     public int Hp = 0;
 
     public GameObject DeadEffectObj = null;
+    public AudioClip enemyTakeDamageAudio = null;
+    public AudioClip enemyDeadAudio = null;
 }

@@ -16,13 +16,16 @@ public class SkillAddDamage : SkillBase
 
     public override void Initialize()
     {
+        this.skillName = "Skill_AddDamage";
         this.skillLevel = 1;
         this.skillMaxLevel = 3;
-        this.skillName = "ªþ¥[§ðÀ»¤O_L1";
+        this.skillDisplayName = "ªþ¥[§ðÀ»¤O_L1";
         
         addDamage = 1;
 
         skillActions = new System.Action<EnemyBase, int>[] { DamageFunc1, DamageFunc2, DamageFunc3};
+
+        base.Initialize();
     }
 
     /// <summary>
@@ -37,11 +40,11 @@ public class SkillAddDamage : SkillBase
         if (this.skillLevel < this.skillMaxLevel)
         {
             this.skillLevel++;
-            this.skillName = $"ªþ¥[§ðÀ»¤O_L{this.skillLevel}";
+            this.skillDisplayName = $"ªþ¥[§ðÀ»¤O_L{this.skillLevel}";
         }   
         else
         {
-            this.skillName = $"ªþ¥[§ðÀ»¤O_Max";
+            this.skillDisplayName = $"ªþ¥[§ðÀ»¤O_Max";
             this.canChooseThisSkill = false;
         }
     }

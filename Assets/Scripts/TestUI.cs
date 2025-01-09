@@ -16,8 +16,10 @@ public class TestUI : MonoBehaviour
 
     private void Update()
     {
-        testText.text = "HP " + SurvivorLikeGame2DFacade.Instance.GetPlayerHP() + "\n" 
-            + "MoveSpeed " + SurvivorLikeGame2DFacade.Instance.GetPlayerController().MoveSpeed + "\n" 
+        testText.text =
+            "Player Name " + UserData.PlayerName + "\n" 
+            + "HP " + SurvivorLikeGame2DFacade.Instance.GetPlayerHP() + "\n"
+            + "MoveSpeed " + SurvivorLikeGame2DFacade.Instance.GetPlayerController().MoveSpeed + "\n"
             + "AttackCDTime " + SurvivorLikeGame2DFacade.Instance.GetPlayerController().AttackCDTime;
     }
 }

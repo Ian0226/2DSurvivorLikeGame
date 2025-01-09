@@ -25,8 +25,8 @@ public class EnemyInsSystem : GameSystemBase
     //private int[] currentInsIndex;
     //private float currentInsSpeed;
 
-    private float insPosOffsetMax = 0.0f;
-    private float insPosOffsetMin = 0.0f;
+    private int insPosOffsetMax = 0;
+    private int insPosOffsetMin = 0;
 
     private int insIndex;
     private Vector2 insPos;
@@ -51,38 +51,13 @@ public class EnemyInsSystem : GameSystemBase
         insEnemies.Add((GameObject)Resources.Load("Prefabs/Enemy/DefaultEnemyL2"));
 
         //敵人生成位置跟玩家的距離
-        insPosOffsetMax = 11f;
-        insPosOffsetMin = 8f;
+        insPosOffsetMax = 20;
+        insPosOffsetMin = 15;
 
         insIndex = 0;
         enemyPoolL1 = InitObjectPool(enemyPoolL1, 0);
         enemyPoolL2 = InitObjectPool(enemyPoolL2, 1);
-        /*enemyPool = new ObjectPool<EnemyBase>(
-            () => 
-            {
-                EnemyBase enemy = GameObject.Instantiate(insEnemies[insIndex], insPos, Quaternion.identity).GetComponent<EnemyBase>();
-                enemy.recycle = (e) =>
-                {
-                    if(e != null)
-                        enemyPool.Release(e);
-                };
-                return enemy;
-            },
-            (enemy) => 
-            {
-                enemy.gameObject.SetActive(true);
-                enemy.transform.position = insPos;
-                enemy.Initialize();
-            },
-            (enemy) =>
-            {
-                enemy.gameObject.SetActive(false);
-            },
-            (enemy) =>
-            {
-                GameObject.Destroy(enemy.gameObject);
-            },true,100,10000
-        );*/
+
     }
 
     private ObjectPool<EnemyBase> InitObjectPool(ObjectPool<EnemyBase> objectPool,int insIndex)
@@ -122,6 +97,18 @@ public class EnemyInsSystem : GameSystemBase
     }
 
     /// <summary>
+    /// 物件池預熱(測試)
+    /// </summary>
+    private void ObjectPoolPreheat()
+    {
+        for(int i = 0;i < 50; i++)
+        {
+            EnemyBase enemy = enemyPoolL1.Get();
+            enemy.recycle(enemy);
+        }
+    }
+
+    /// <summary>
     /// 生成敵人
     /// </summary>
     /// <param name="index">生成敵人類型Index，對應存放各個種類敵人的insEnemies list</param>
@@ -129,9 +116,20 @@ public class EnemyInsSystem : GameSystemBase
     {
         this.insIndex = insIndex;
         float theta = Random.Range(0, 360);
-        float insPosOffset = Random.Range(insPosOffsetMin, insPosOffsetMax);
+        int insPosOffset = Random.Range(insPosOffsetMin, insPosOffsetMax);
+        int random = Random.Range(0, 2);
+
         Vector2 playerPos = survivorLikeGame.GetPlayerPos();
-        insPos = new Vector2(playerPos.x + Mathf.Cos(theta) * insPosOffset, playerPos.y + Mathf.Sin(theta) * insPosOffset);
+        Vector2 playerDir = survivorLikeGame.GetPlayerMoveDirection();
+        if(random < 1 && playerDir.magnitude != 0)
+        {
+            insPos = playerPos + playerDir * 15;
+            //insPos = new Vector2(playerPos.x + Mathf.Cos(theta) * insPosOffset, playerPos.y + Mathf.Sin(theta) * insPosOffset);
+        }
+        else
+        {
+            insPos = new Vector2(playerPos.x + Mathf.Cos(theta) * insPosOffset, playerPos.y + Mathf.Sin(theta) * insPosOffset);
+        }
         //Vector2 playerPos = survivorLikeGame.GetPlayerPos();
         //Vector2 insPos = new Vector2(playerPos.x + Random.Range(insPosOffsetMin, insPosOffsetMax), playerPos.y + Random.Range(insPosOffsetMin, insPosOffsetMax));
         EnemyBase enemy = GetEnemy(insIndex);

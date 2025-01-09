@@ -30,6 +30,7 @@ public class PlayerShootHandler
             () =>
             {
                 ProjectileBase projectile = GameObject.Instantiate(_playerController.PlayerCurrentProjectile.gameObject, _playerController.PlayerPos, Quaternion.identity).GetComponent<ProjectileBase>();
+                projectile.Intialize();
                 projectile.recycle = (p) =>
                 {
                     projectilePool.Release(p);
@@ -38,10 +39,9 @@ public class PlayerShootHandler
             },
             (projectile) =>
             {
-                projectile.gameObject.SetActive(true);
                 projectile.transform.position = _playerController.PlayerPos;
+                projectile.gameObject.SetActive(true);
                 //projectile.ExistTime = 1f;//設定投射物存在時間
-                projectile.InitProperties();
             },
             (projectile) =>
             {
@@ -70,7 +70,8 @@ public class PlayerShootHandler
                 for (int i = 0; i < _playerController.ProjectilesCount; i++)
                 {
                     ProjectileBase projectile = projectilePool.Get();
-                    projectile.SetMoveDir(direction);
+                    projectile.InitProperties();
+                    projectile.InitProjectile(direction);
                 }
                 break;
             case PlayerController.PlayerAttackModeEnum.ray:

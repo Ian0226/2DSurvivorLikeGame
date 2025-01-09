@@ -11,6 +11,8 @@ public class PlayerEffectHandler
 
     private SpriteRenderer playerSprite = null;
     private Color playerTakeDamageColor;
+
+    private AudioSource playerTakeDamageAudio = null;
     public PlayerEffectHandler(PlayerController playerController)
     {
         _playerController = playerController;
@@ -25,6 +27,10 @@ public class PlayerEffectHandler
 
         playerSprite = _playerController.PlayerTransform.gameObject.GetComponent<SpriteRenderer>();
         playerTakeDamageColor = Color.red;
+
+        playerTakeDamageAudio = UnityTool.FindChildGameObject(_playerController.PlayerTransform.gameObject, "PlayerTakeDamageAudio").
+            GetComponent<AudioSource>();
+        //playerTakeDamageAudio.clip = (AudioClip)Resources.Load("AudioClips/Player/playerTakeDamage");
     }
 
     public void Update()
@@ -39,8 +45,9 @@ public class PlayerEffectHandler
     public void SetParticleVelocity(Vector2 direction)
     {
         var module = playerEffectParticle.velocityOverLifetime;
-        module.x = -direction.x;
-        module.y = -direction.y;
+        int offset = 2;
+        module.x = direction.x == 0 ? direction.x : direction.x > 0 ? -(direction.x + offset) : -(direction.x - offset);
+        module.y = direction.y == 0 ? direction.y : direction.y > 0 ? -(direction.y + offset) : -(direction.y - offset);
     }
 
     /// <summary>
@@ -49,6 +56,7 @@ public class PlayerEffectHandler
     public void PlayerTakeDamageEffect()
     {
         playerSprite.color = playerTakeDamageColor;
+        playerTakeDamageAudio.PlayOneShot(playerTakeDamageAudio.clip);
         CoroutineTool.Instance.DelayExcuteAction(() => { playerSprite.color = Color.white; },0.1f);
     }
 }

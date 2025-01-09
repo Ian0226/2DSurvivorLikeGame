@@ -25,6 +25,11 @@ public class FollowPlayerHintUI : UserInterface
         playerScoreHintImg.fillAmount = 0;
     }
 
+    public override void Update()
+    {
+        
+    }
+
     public void SetAttackCDImgFillAmount(float fillAmount)
     {
         AttackCDHintImg.fillAmount = fillAmount;

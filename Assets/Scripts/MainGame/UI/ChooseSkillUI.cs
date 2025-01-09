@@ -82,17 +82,27 @@ public class ChooseSkillUI : UserInterface
         }
         //skillSelectionBtn01.onClick.AddListener(skillManager.AllSkillContainerList[0].UseSkill);//Test
         SetButtonUI(skillSelectionBtn01, _skillManager.AllSkillContainerList[randomNum[0]].UseSkill,
-            _skillManager.AllSkillContainerList[randomNum[0]].SkillName);
+            _skillManager.AllSkillContainerList[randomNum[0]].SkillDisplayName, 
+            _skillManager.AllSkillContainerList[randomNum[0]].SkillIcon,
+            _skillManager.AllSkillContainerList[randomNum[0]].SkillInfo
+            );
         SetButtonUI(skillSelectionBtn02, _skillManager.AllSkillContainerList[randomNum[1]].UseSkill,
-            _skillManager.AllSkillContainerList[randomNum[1]].SkillName);
+            _skillManager.AllSkillContainerList[randomNum[1]].SkillDisplayName,
+            _skillManager.AllSkillContainerList[randomNum[1]].SkillIcon,
+            _skillManager.AllSkillContainerList[randomNum[1]].SkillInfo
+            );
         SetButtonUI(skillSelectionBtn03, _skillManager.AllSkillContainerList[randomNum[2]].UseSkill,
-            _skillManager.AllSkillContainerList[randomNum[2]].SkillName);
+            _skillManager.AllSkillContainerList[randomNum[2]].SkillDisplayName,
+            _skillManager.AllSkillContainerList[randomNum[2]].SkillIcon,
+            _skillManager.AllSkillContainerList[randomNum[2]].SkillInfo
+            );
     }
 
-    private void SetButtonUI(Button btn,System.Action onClickAction,string showText)
+    private void SetButtonUI(Button btn,System.Action onClickAction,string showText,Sprite icon,string SkillInfo)
     {
         btn.onClick.RemoveAllListeners();//清除上一次的Action紀錄
         btn.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = showText;
+        btn.transform.GetChild(1).GetComponent<Image>().sprite = icon;
         if (showText.Contains("_Max"))//技能等級已達最大值
             return;
 

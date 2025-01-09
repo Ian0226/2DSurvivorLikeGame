@@ -12,11 +12,14 @@ public class SkillAddAtkSpeed : SkillBase
 
     public override void Initialize()
     {
+        this.skillName = "Skill_AddAtkSpeed";
         this.skillLevel = 1;
         this.skillMaxLevel = 3;
-        this.skillName = "增加功速_L1";
+        this.skillDisplayName = "增加功速_L1";
 
         atkSpeedValues = new int[] { -1, -2, -3 };
+
+        base.Initialize();
     }
 
     public override void UseSkill()
@@ -26,11 +29,11 @@ public class SkillAddAtkSpeed : SkillBase
         if (this.skillLevel < this.skillMaxLevel)
         {
             this.skillLevel++;
-            this.skillName = $"增加功速_L{this.skillLevel}";
+            this.skillDisplayName = $"增加功速_L{this.skillLevel}";
         }
         else
         {
-            this.skillName = $"增加功速_Max";
+            this.skillDisplayName = $"增加功速_Max";
             this.canChooseThisSkill = false;
         }
     }

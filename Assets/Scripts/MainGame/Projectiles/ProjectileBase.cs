@@ -15,13 +15,15 @@ public abstract class ProjectileBase : MonoBehaviour
     protected float existTime = 0.0f;
 
     private Vector2 moveDir;
-    private Rigidbody2D rb = null;
-
+    
     public delegate void Recycle(ProjectileBase projectile);
     public Recycle recycle;
 
+    //Components
+    private Rigidbody2D rb = null;
     protected Sprite projectileSprite = null;
     protected Material projectileMat = null;
+    protected TrailRenderer trailRenderer = null;
 
     protected System.Action<EnemyBase, int> damageAction = null;
 
@@ -31,8 +33,7 @@ public abstract class ProjectileBase : MonoBehaviour
 
     private void Start()
     {
-        Intialize();
-        InitProperties();
+        //Intialize();
     }
 
     public virtual void Update()
@@ -40,9 +41,13 @@ public abstract class ProjectileBase : MonoBehaviour
         existTime -= Time.deltaTime;
         if (ExistTime <= 0)
         {
+            trailRenderer.enabled = false;
             recycle(this);
         }
+    }
 
+    public void FixedUpdate()
+    {
         Move();
     }
 
@@ -63,13 +68,29 @@ public abstract class ProjectileBase : MonoBehaviour
     public virtual void Move() 
     {
         //moveDir = SurvivorLikeGame2DFacade.Instance.GetPlayerAimDir();
-        rb.AddForce(moveDir.normalized * speed,ForceMode2D.Impulse);
+        rb.velocity = moveDir.normalized * speed;
+        //rb.AddForce(moveDir.normalized * speed,ForceMode2D.Impulse);
+    }
+
+    /// <summary>
+    /// 初始化子彈
+    /// </summary>
+    /// <param name="dir">子彈移動方向</param>
+    public void InitProjectile(Vector2 dir)
+    {
+        SetMoveDir(dir);
+        InitTrail();
     }
 
     public void SetMoveDir(Vector2 dir) 
     {
         moveDir = dir;
         this.transform.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+    }
+
+    private void InitTrail()
+    {
+        trailRenderer.enabled = true;
     }
 
     public virtual void DamageFunc(EnemyBase tagetEnemy, int damage) { }

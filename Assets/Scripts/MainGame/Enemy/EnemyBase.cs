@@ -12,6 +12,8 @@ public abstract class EnemyBase : MonoBehaviour
     protected float speed = 0.0f;
     protected int damage = 0;
     protected int hp = 0;
+    protected AudioClip takeDamageAudio;
+    protected AudioClip deadAudio;
 
     /// <summary>
     /// 玩家擊殺該敵人可獲得的分數
@@ -24,6 +26,11 @@ public abstract class EnemyBase : MonoBehaviour
     /// 死亡特效
     /// </summary>
     protected GameObject deadEffectObj = null;
+
+    /// <summary>
+    /// 音效組件
+    /// </summary>
+    protected AudioSource enemyAudioSource = null;
 
     public delegate void Recycle(EnemyBase enemy);
     public Recycle recycle;
@@ -38,6 +45,11 @@ public abstract class EnemyBase : MonoBehaviour
 
     private void Update()
     {
+        //FollowPlayer();
+    }
+
+    private void FixedUpdate()
+    {
         FollowPlayer();
     }
 
@@ -48,6 +60,7 @@ public abstract class EnemyBase : MonoBehaviour
         InitProps();
 
         targetPlayer = UnityTool.FindGameObject("Player").transform;
+        enemyAudioSource = this.GetComponent<AudioSource>();
     }
     /// <summary>
     /// 參數初始化
@@ -60,6 +73,8 @@ public abstract class EnemyBase : MonoBehaviour
         this.hp = enemyProp.Hp;
         this.damage = enemyProp.Damage;
         this.rewardScore = enemyProp.KillReward;
+        this.takeDamageAudio = enemyProp.enemyTakeDamageAudio;
+        this.deadAudio = enemyProp.enemyDeadAudio;
 
         this.deadEffectObj = enemyProp.DeadEffectObj;
     }

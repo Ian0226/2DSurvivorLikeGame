@@ -12,11 +12,14 @@ public class SkillAddSpeed : SkillBase
 
     public override void Initialize()
     {
-        this.skillName = "增加速度_L1";
+        this.skillName = "Skill_AddSpeed";
+        this.skillDisplayName = "增加速度_L1";
         this.skillLevel = 1;
         this.skillMaxLevel = 3;
 
         skillActions = new System.Action[] { AddSpeed1, AddSpeed2, AddSpeed3 };
+
+        base.Initialize();
     }
 
     public override void UseSkill()
@@ -26,11 +29,11 @@ public class SkillAddSpeed : SkillBase
         if (this.skillLevel < this.skillMaxLevel)
         {
             this.skillLevel++;
-            this.skillName = $"增加速度_L{this.skillLevel}";
+            this.skillDisplayName = $"增加速度_L{this.skillLevel}";
         }
         else
         {
-            this.skillName = $"增加速度_Max";
+            this.skillDisplayName = $"增加速度_Max";
         }
     }
 

@@ -18,6 +18,8 @@ public class DefualtProjectile : ProjectileBase
         this.existTime = _projectileProp.existTime;
 
         damageAction = DamageFunc;
+        
+        trailRenderer = this.GetComponent<TrailRenderer>();
     }
 
     public override void Update()

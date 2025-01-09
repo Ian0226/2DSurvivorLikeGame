@@ -12,11 +12,14 @@ public class SkillAddHp : SkillBase
 
     public override void Initialize()
     {
-        this.skillName = "增加血量_L1";
+        this.skillName = "Skill_AddHp";
+        this.skillDisplayName = "增加血量_L1";
         this.skillLevel = 1;
         this.skillMaxLevel = 3;
 
         skillActions = new System.Action[] { AddHp1, AddHp2, AddHp3 };
+
+        base.Initialize();
     }
 
     public override void UseSkill()
@@ -25,11 +28,11 @@ public class SkillAddHp : SkillBase
         if(this.skillLevel < this.skillMaxLevel)
         {
             this.skillLevel++;
-            this.skillName = $"增加血量_L{this.skillLevel}";
+            this.skillDisplayName = $"增加血量_L{this.skillLevel}";
         }
         else
         {
-            this.skillName = $"增加血量_Max";
+            this.skillDisplayName = $"增加血量_Max";
         }    
     }
 

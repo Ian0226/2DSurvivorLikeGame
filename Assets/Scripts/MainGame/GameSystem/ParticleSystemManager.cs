@@ -42,10 +42,12 @@ public class ParticleSystemManager : GameSystemBase
         );
     }
 
-    public void CreateParticle(GameObject particleObj,Vector2 insPos)
+    public void CreateParticle(GameObject particleObj,Vector2 insPos,System.Action otherEffect)
     {
         this.createdParticleObj = particleObj;
         this.insPos = insPos;
         inGameParticlesPool.Get();
+        if(otherEffect != null)
+            otherEffect.Invoke();
     }
 }

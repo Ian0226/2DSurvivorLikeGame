@@ -13,6 +13,7 @@ public class MenuState : SceneState
     public override void StateBegin()
     {
         MainMenuHandler.Instance.Initailize();
+        MainMenuHandler.Instance.ChangeSceneStateAction = ChangeState;
     }
 
     public override void StateUpdate()
@@ -22,6 +23,11 @@ public class MenuState : SceneState
 
     public override void StateEnd()
     {
-        
+        MainMenuHandler.Instance.Release();
+    }
+
+    public void ChangeState()
+    {
+        this.controller.SetState(new MainGameState(controller), "MainGameScene");
     }
 }

@@ -170,6 +170,14 @@ public class SurvivorLikeGame2DFacade
         _playerController.AttackeState = attackState;
     }
 
+    /// <summary>
+    /// 獲取玩家移動方向
+    /// </summary>
+    public Vector2 GetPlayerMoveDirection()
+    {
+        return _playerController.MoveDirection;
+    }
+
     //Input Manager
     /// <summary>
     /// 獲取InputManager
@@ -315,10 +323,10 @@ public class SurvivorLikeGame2DFacade
     /// </summary>
     /// <param name="particleObj"></param>
     /// <param name="insPos"></param>
-    public void CreateParticle(GameObject particleObj, Vector2 insPos)
+    public void CreateParticle(GameObject particleObj, Vector2 insPos,System.Action otherEffect)
     {
         if (_particleSystemManager != null)
-            _particleSystemManager.CreateParticle(particleObj, insPos);
+            _particleSystemManager.CreateParticle(particleObj, insPos,otherEffect);
     }
     #endregion
 }
