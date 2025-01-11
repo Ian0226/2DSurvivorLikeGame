@@ -51,8 +51,8 @@ public class EnemyInsSystem : GameSystemBase
         insEnemies.Add((GameObject)Resources.Load("Prefabs/Enemy/DefaultEnemyL2"));
 
         //敵人生成位置跟玩家的距離
-        insPosOffsetMax = 20;
-        insPosOffsetMin = 15;
+        insPosOffsetMax = 25;
+        insPosOffsetMin = 20;
 
         insIndex = 0;
         enemyPoolL1 = InitObjectPool(enemyPoolL1, 0);
@@ -123,7 +123,7 @@ public class EnemyInsSystem : GameSystemBase
         Vector2 playerDir = survivorLikeGame.GetPlayerMoveDirection();
         if(random < 1 && playerDir.magnitude != 0)
         {
-            insPos = playerPos + playerDir * 15;
+            insPos = playerPos + playerDir * 20;
             //insPos = new Vector2(playerPos.x + Mathf.Cos(theta) * insPosOffset, playerPos.y + Mathf.Sin(theta) * insPosOffset);
         }
         else

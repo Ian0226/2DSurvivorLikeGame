@@ -41,7 +41,7 @@ public abstract class ProjectileBase : MonoBehaviour
         existTime -= Time.deltaTime;
         if (ExistTime <= 0)
         {
-            trailRenderer.enabled = false;
+            SetTrail(false);
             recycle(this);
         }
     }
@@ -57,10 +57,15 @@ public abstract class ProjectileBase : MonoBehaviour
 
         rb = this.GetComponent<Rigidbody2D>();
 
-        SpriteRenderer pSpriteRenderer = this.GetComponent<SpriteRenderer>();
+        if(this.GetComponent<SpriteRenderer>() != null)
+        {
+            SpriteRenderer pSpriteRenderer = this.GetComponent<SpriteRenderer>();
+            projectileSprite = pSpriteRenderer.sprite;
+            projectileMat = pSpriteRenderer.material;
+        }
 
-        projectileSprite = pSpriteRenderer.sprite;
-        projectileMat = pSpriteRenderer.material;
+        if (this.GetComponent<TrailRenderer>() != null)
+            trailRenderer = this.GetComponent<TrailRenderer>();
     }
 
     public virtual void InitProperties() { }
@@ -79,7 +84,7 @@ public abstract class ProjectileBase : MonoBehaviour
     public void InitProjectile(Vector2 dir)
     {
         SetMoveDir(dir);
-        InitTrail();
+        SetTrail(true);
     }
 
     public void SetMoveDir(Vector2 dir) 
@@ -88,9 +93,10 @@ public abstract class ProjectileBase : MonoBehaviour
         this.transform.rotation = Quaternion.FromToRotation(Vector3.up, dir);
     }
 
-    private void InitTrail()
+    private void SetTrail(bool state)
     {
-        trailRenderer.enabled = true;
+        if (trailRenderer != null)
+            trailRenderer.enabled = state;
     }
 
     public virtual void DamageFunc(EnemyBase tagetEnemy, int damage) { }

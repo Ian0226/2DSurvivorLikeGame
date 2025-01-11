@@ -12,7 +12,6 @@ public class PlayerEffectHandler
     private SpriteRenderer playerSprite = null;
     private Color playerTakeDamageColor;
 
-    private AudioSource playerTakeDamageAudio = null;
     public PlayerEffectHandler(PlayerController playerController)
     {
         _playerController = playerController;
@@ -27,10 +26,6 @@ public class PlayerEffectHandler
 
         playerSprite = _playerController.PlayerTransform.gameObject.GetComponent<SpriteRenderer>();
         playerTakeDamageColor = Color.red;
-
-        playerTakeDamageAudio = UnityTool.FindChildGameObject(_playerController.PlayerTransform.gameObject, "PlayerTakeDamageAudio").
-            GetComponent<AudioSource>();
-        //playerTakeDamageAudio.clip = (AudioClip)Resources.Load("AudioClips/Player/playerTakeDamage");
     }
 
     public void Update()
@@ -56,7 +51,10 @@ public class PlayerEffectHandler
     public void PlayerTakeDamageEffect()
     {
         playerSprite.color = playerTakeDamageColor;
-        playerTakeDamageAudio.PlayOneShot(playerTakeDamageAudio.clip);
+
+        AudioManager.Instance.PlayerAudioOneShot(AudioManager.GameAudioSource.PlayerTakeDamageAudio,
+            AudioManager.Instance.GetAudioSource(AudioManager.GameAudioSource.PlayerTakeDamageAudio).clip);
+
         CoroutineTool.Instance.DelayExcuteAction(() => { playerSprite.color = Color.white; },0.1f);
     }
 }

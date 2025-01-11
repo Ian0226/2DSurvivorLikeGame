@@ -18,6 +18,7 @@ public abstract class SkillBase
     protected bool canChooseThisSkill = true;
 
     public string SkillDisplayName { get => skillDisplayName; }
+    public string SkillName { get => skillName; }
     public bool CanChooseThisSkill { get => canChooseThisSkill;}
     public Sprite SkillIcon { get => skillIcon;}
     public string SkillInfo { get => skillInfo; }
@@ -34,5 +35,5 @@ public abstract class SkillBase
     }
 
     public virtual void UseSkill() { }
-    
+
 }

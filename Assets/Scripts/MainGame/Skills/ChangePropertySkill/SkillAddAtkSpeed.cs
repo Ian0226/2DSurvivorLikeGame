@@ -17,7 +17,7 @@ public class SkillAddAtkSpeed : SkillBase
         this.skillMaxLevel = 3;
         this.skillDisplayName = "增加功速_L1";
 
-        atkSpeedValues = new int[] { -1, -2, -3 };
+        atkSpeedValues = new int[] { -5, -7, -10 };
 
         base.Initialize();
     }

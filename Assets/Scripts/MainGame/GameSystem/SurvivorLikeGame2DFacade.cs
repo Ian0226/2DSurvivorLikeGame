@@ -63,6 +63,11 @@ public class SurvivorLikeGame2DFacade
         _gameInfoUI.Update();
     }
 
+    public void LateUpdate()
+    {
+        _playerController.LateUpdate();
+    }
+
     public void Release()
     {
         _inputManager.Release();
@@ -312,10 +317,10 @@ public class SurvivorLikeGame2DFacade
     /// 設定遊戲結果至UI
     /// </summary>
     /// <param name="result"></param>
-    public void SetGameResultUI(GameResult result)
+    public void SetGameResultUI(GameResult result,int heighest)
     {
         if (_gameResultUI != null)
-            _gameResultUI.SetGameResult(result);
+            _gameResultUI.SetGameResult(result, heighest);
     }
 
     /// <summary>

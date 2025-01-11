@@ -43,16 +43,19 @@ public class SkillAddHp : SkillBase
 
     private void AddHp1()
     {
-        _playerController.Hp += 10;
+        _playerController.HpMax += 20;
+        _playerController.AddPlayerHp(20);
     }
 
     private void AddHp2()
     {
-        _playerController.Hp += 20;
+        _playerController.HpMax += 40;
+        _playerController.AddPlayerHp(40);
     }
 
     private void AddHp3()
     {
-        _playerController.Hp += 40;
+        _playerController.HpMax += 80;
+        _playerController.AddPlayerHp(80);
     }
 }

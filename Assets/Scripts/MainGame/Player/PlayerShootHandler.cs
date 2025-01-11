@@ -15,8 +15,6 @@ public class PlayerShootHandler
     /// </summary>
     private ObjectPool<ProjectileBase> projectilePool = null;
 
-    private AudioSource shootAudio = null;
-
     public PlayerShootHandler(PlayerController playerController)
     {
         this._playerController = playerController;
@@ -29,7 +27,7 @@ public class PlayerShootHandler
         projectilePool = new ObjectPool<ProjectileBase>(//參數 : 1.創建物件時要做的事情 2.索取物件時要做的事 3.回收物件時要做的事 4.物件刪除時要做的事
             () =>
             {
-                ProjectileBase projectile = GameObject.Instantiate(_playerController.PlayerCurrentProjectile.gameObject, _playerController.PlayerPos, Quaternion.identity).GetComponent<ProjectileBase>();
+                ProjectileBase projectile = GameObject.Instantiate(_playerController.PlayerCurrentProjectile.gameObject, _playerController.PlayerTransform.position, Quaternion.identity).GetComponent<ProjectileBase>();
                 projectile.Intialize();
                 projectile.recycle = (p) =>
                 {
@@ -39,7 +37,7 @@ public class PlayerShootHandler
             },
             (projectile) =>
             {
-                projectile.transform.position = _playerController.PlayerPos;
+                projectile.transform.position = _playerController.PlayerTransform.position;
                 projectile.gameObject.SetActive(true);
                 //projectile.ExistTime = 1f;//設定投射物存在時間
             },
@@ -54,14 +52,22 @@ public class PlayerShootHandler
         );
 
         //初始化音效
-        shootAudio = UnityTool.FindChildGameObject(_playerController.PlayerTransform.gameObject, "PlayerShootAudio").
-            GetComponent<AudioSource>();
-        shootAudio.clip = (AudioClip)Resources.Load($"AudioClips/Projectiles/Audio_{_playerController.PlayerCurrentProjectile.name}");
+        AudioManager.Instance.GetAudioSource(AudioManager.GameAudioSource.PlayerShootAudio).clip = 
+            (AudioClip)Resources.Load($"AudioClips/Projectiles/Audio_{_playerController.PlayerCurrentProjectile.name}");
+    }
+
+    /// <summary>
+    /// 清空物件池
+    /// </summary>
+    public void ClearObjectPool()
+    {
+        projectilePool.Clear();
     }
 
     public void Shoot()
     {
-        shootAudio.PlayOneShot(shootAudio.clip);
+        AudioManager.Instance.PlayerAudioOneShot(AudioManager.GameAudioSource.PlayerShootAudio,
+            AudioManager.Instance.GetAudioSource(AudioManager.GameAudioSource.PlayerShootAudio).clip);
 
         switch (_playerController.PlayerAttackMode)
         {

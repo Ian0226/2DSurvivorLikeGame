@@ -18,5 +18,24 @@ public class Test : MonoBehaviour
     void Update()
     {
         SurvivorLikeGame2DFacade.Instance.Update();
+        TestFunc();
+    }
+
+    private void FixedUpdate()
+    {
+        //SurvivorLikeGame2DFacade.Instance.FixedUpdate();
+    }
+
+    private void LateUpdate()
+    {
+        SurvivorLikeGame2DFacade.Instance.LateUpdate();
+    }
+
+    private void TestFunc()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            FirebaseManager.Instance.LoadPlayerLog();
+        }
     }
 }

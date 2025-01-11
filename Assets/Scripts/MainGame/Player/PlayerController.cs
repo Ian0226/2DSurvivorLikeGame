@@ -11,6 +11,7 @@ public class PlayerController : GameSystemBase
     private Transform playerTransform;
 
     private Action playerBehaviourAction = null;
+    private Action playerPassiveSkillAction = null;//玩家被動技能行為
 
     #region 玩家數值
 
@@ -22,7 +23,7 @@ public class PlayerController : GameSystemBase
     /// <summary>
     /// 攻擊CD時間，單位為毫秒
     /// </summary>
-    private int attackCDTime = 10;//修改這個來改變CD的快慢，數值越大越慢，越小越快
+    private int attackCDTime = 0;//修改這個來改變CD的快慢，數值越大越慢，越小越快
     private int attackCDMax = 1;
     private float currentAttackCD = 0;
     private bool canAttack = false;
@@ -30,7 +31,7 @@ public class PlayerController : GameSystemBase
     /// <summary>
     /// 玩家總分數
     /// </summary>
-    private long playerScore = 0;
+    private int playerScore = 0;
 
     /// <summary>
     /// 玩家獲得能力三選一需要累積的分數
@@ -42,6 +43,10 @@ public class PlayerController : GameSystemBase
     /// </summary>
     private int pyCurrentAccumulateScore = 0;
 
+    /// <summary>
+    /// 玩家最大血量
+    /// </summary>
+    private int hpMax = 0;
     /// <summary>
     /// 玩家血量
     /// </summary>
@@ -122,18 +127,24 @@ public class PlayerController : GameSystemBase
     public bool CanAttack { get => canAttack; set => canAttack = value; }
     public Vector2 MousePos { get => mousePos;}
     public Vector2 PlayerPos { get => playerPos;}
-    public ProjectileBase PlayerCurrentProjectile { get => playerCurrentProjectile; set => playerCurrentProjectile = value; }
+    public ProjectileBase PlayerCurrentProjectile { get => playerCurrentProjectile;
+        set {
+            _shootProjectileHandler.ClearObjectPool();
+            playerCurrentProjectile = value; 
+        } }
     public PlayerAttackModeEnum PlayerAttackMode { get => playerAttackMode; set => playerAttackMode = value; }
     public int ProjectilesCount { get => projectilesCount; set => projectilesCount = value; }
     public Vector2 AimDirection { get => aimDirection;}
-    public int Hp { get => hp; set => hp = value; }
-    public long PlayerScore { get => playerScore;}
+    public int PlayerScore { get => playerScore;}
     public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
     public Action PlayerBehaviourAction { get => playerBehaviourAction; set => playerBehaviourAction = value; }
     public int AttackCDTime { get => attackCDTime; set => attackCDTime = value; }
     public Transform PlayerTransform { get => playerTransform;}
     public bool AttackeState { get => attackeState; set => attackeState = value; }
     public Vector2 MoveDirection { get => moveDirection;}
+    public int HpMax { get => hpMax; set =>  hpMax = value;  }
+    public int Hp {get => hp;}
+    public Action PlayerPassiveSkillAction { get => playerPassiveSkillAction; set => playerPassiveSkillAction = value; }
 
     public PlayerController(SurvivorLikeGame2DFacade survivorLikeGame) : base(survivorLikeGame)
     {
@@ -159,8 +170,8 @@ public class PlayerController : GameSystemBase
         if(playerBehaviourAction != null)
             playerBehaviourAction();
 
-        if(attackeState)
-            HandleAttack();
+        if (playerPassiveSkillAction != null)
+            playerPassiveSkillAction();
 
         _playerEffectHandler.Update();
         //SetVectors();
@@ -169,17 +180,30 @@ public class PlayerController : GameSystemBase
         //HandleLookDir();
     }
 
+    public void LateUpdate()
+    {
+        if (attackeState)
+            HandleAttack();
+    }
+
+    public void FixedUpdate()
+    {
+        //if (playerBehaviourAction != null)
+            //playerBehaviourAction();
+    }
+
     private void InitProperties()
     {
         attackCDMax = 1;
         currentAttackCD = attackCDMax;
-        attackCDTime = 7;//調整這個即可調整起始攻擊CD
+        attackCDTime = 35;//調整這個即可調整起始攻擊CD
         canAttack = true;
 
         playerScore = 0;
         playerSkillScore = 20;
 
         hp = 100;
+        hpMax = hp;
 
         //Set default projectile
         GameObject projectileObj = (GameObject)Resources.Load("Prefabs/Projectiles/DefaultProjectile");
@@ -268,12 +292,20 @@ public class PlayerController : GameSystemBase
         return moveDirection;
     }
 
+    public void AddPlayerHp(int addValue)
+    {
+        if (hpMax - hp > addValue)
+            hp += addValue;
+        else
+            hp = hpMax;
+    }
+
     private async void CDCount()
     {
         while(currentAttackCD > 0)
         {
             if (survivorLikeGame.GetAttackCDHintImg() == null) return;
-            currentAttackCD -= 0.01f;
+            currentAttackCD -= 0.05f;//origin 0.01f
             survivorLikeGame.SetAttackCDImgFillAmount(currentAttackCD);
             //Debug.Log(currentAttackCD);
             await Task.Delay(attackCDTime);
@@ -356,9 +388,7 @@ public class PlayerController : GameSystemBase
 
     private GameResult SetGameResultInfo()
     {
-        GameResult gameResult;
-        gameResult.Score = this.playerScore;
-        gameResult.GameTime = survivorLikeGame.GetGameTime();
+        GameResult gameResult = new GameResult(this.playerScore, survivorLikeGame.GetGameTime(), DateTime.Now.ToString());
 
         return gameResult;
     }

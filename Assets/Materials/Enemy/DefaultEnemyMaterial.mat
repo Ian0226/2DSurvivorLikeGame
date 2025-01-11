@@ -65,7 +65,7 @@ Material:
     - _EmissionColor: {r: 24.452831, g: 8.881453, b: 8.881453, a: 0}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _MainColor: {r: 10.680627, g: 10.680627, b: 10.680627, a: 1}
-    - _MainEmissionColor: {r: 2.9960785, g: 2.9960785, b: 2.9960785, a: 0}
-    - _OutlineColor: {r: 6.0235295, g: 5.866667, b: 2.6980393, a: 0}
+    - _MainEmissionColor: {r: 6.706287, g: 2.4990408, b: 2.4990408, a: 0}
+    - _OutlineColor: {r: 383.49805, g: 383.49805, b: 383.49805, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

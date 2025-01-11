@@ -20,6 +20,7 @@ public class ChooseSkillUI : UserInterface
     private Button confiromBtn = null;
 
     private Vector2 chooseSkillPanelOriginPos;
+    private float uiMoveSpeed = 0.0f;
 
     public SkillManager SkillManager { get => _skillManager; set => _skillManager = value; }
 
@@ -43,11 +44,8 @@ public class ChooseSkillUI : UserInterface
         chooseSkillPanelOriginPos = chooseSkillPanel.anchoredPosition;
 
         chooseSkillCanvas.SetActive(false);
-    }
 
-    public override void Update()
-    {
-
+        uiMoveSpeed = 0.6f;
     }
 
     public override void Show()
@@ -58,9 +56,28 @@ public class ChooseSkillUI : UserInterface
     
     private void HandleUIAnimation()
     {
-        RandomSkills();
+        //RandomSkills();
         if (chooseSkillCanvas.gameObject.activeInHierarchy)
-            chooseSkillPanel.DOAnchorPosY(0, 0.45f).SetUpdate(true);
+            chooseSkillPanel.DOAnchorPosY(0, uiMoveSpeed).SetUpdate(true);
+    }
+
+    public void SetRandomSkillOnUI(List<SkillBase> skills)
+    {
+        SetButtonUI(skillSelectionBtn01, skills[0].UseSkill,
+            skills[0].SkillDisplayName,
+            skills[0].SkillIcon,
+            skills[0].SkillInfo
+            );
+        SetButtonUI(skillSelectionBtn02, skills[1].UseSkill,
+            skills[1].SkillDisplayName,
+            skills[1].SkillIcon,
+            skills[1].SkillInfo
+            );
+        SetButtonUI(skillSelectionBtn03, skills[2].UseSkill,
+            skills[2].SkillDisplayName,
+            skills[2].SkillIcon,
+            skills[2].SkillInfo
+            );
     }
 
     /// <summary>
@@ -81,7 +98,7 @@ public class ChooseSkillUI : UserInterface
             randomNum.Add(r);
         }
         //skillSelectionBtn01.onClick.AddListener(skillManager.AllSkillContainerList[0].UseSkill);//Test
-        SetButtonUI(skillSelectionBtn01, _skillManager.AllSkillContainerList[randomNum[0]].UseSkill,
+        /*SetButtonUI(skillSelectionBtn01, _skillManager.AllSkillContainerList[randomNum[0]].UseSkill,
             _skillManager.AllSkillContainerList[randomNum[0]].SkillDisplayName, 
             _skillManager.AllSkillContainerList[randomNum[0]].SkillIcon,
             _skillManager.AllSkillContainerList[randomNum[0]].SkillInfo
@@ -95,7 +112,7 @@ public class ChooseSkillUI : UserInterface
             _skillManager.AllSkillContainerList[randomNum[2]].SkillDisplayName,
             _skillManager.AllSkillContainerList[randomNum[2]].SkillIcon,
             _skillManager.AllSkillContainerList[randomNum[2]].SkillInfo
-            );
+            );*/
     }
 
     private void SetButtonUI(Button btn,System.Action onClickAction,string showText,Sprite icon,string SkillInfo)
@@ -115,7 +132,7 @@ public class ChooseSkillUI : UserInterface
 
     public override void Release()
     {
-        chooseSkillPanel.DOAnchorPosY(chooseSkillPanelOriginPos.y, 0.45f).SetUpdate(true).
+        chooseSkillPanel.DOAnchorPosY(chooseSkillPanelOriginPos.y, uiMoveSpeed).SetUpdate(true).
             OnComplete(() => {
                 chooseSkillCanvas.SetActive(false);
                 survivorLikeGame.GameContinue();

@@ -20,16 +20,52 @@ public class SkillManager
         }
     }
 
-    private List<SkillBase> allSkillContainerList = new List<SkillBase>();
-    public List<SkillBase> AllSkillContainerList { get => allSkillContainerList;}
+    private List<SkillOption> allSkillContainerList = new List<SkillOption>();
+    public List<SkillOption> AllSkillContainerList { get => allSkillContainerList;}
 
     private void Initialize()
     {
         PlayerController _playerController = SurvivorLikeGame2DFacade.Instance.GetPlayerController();
+
         //目前使用Add加入技能至List中
-        allSkillContainerList.Add(new SkillAddDamage(_playerController));
-        allSkillContainerList.Add(new SkillAddHp(_playerController));
-        allSkillContainerList.Add(new SkillAddSpeed(_playerController));
-        allSkillContainerList.Add(new SkillAddAtkSpeed(_playerController));
+        allSkillContainerList.Add(new SkillOption(new SkillAddDamage(_playerController),5));
+        allSkillContainerList.Add(new SkillOption(new SkillAddHp(_playerController),5));
+        allSkillContainerList.Add(new SkillOption(new SkillAddSpeed(_playerController),5));
+        allSkillContainerList.Add(new SkillOption(new SkillAddAtkSpeed(_playerController),5));
+        allSkillContainerList.Add(new SkillOption(new SkillRecoverHp(_playerController),1));
+
+        //更換投射物技能
+        allSkillContainerList.Add(new SkillOption(new SkillChangeProjectile(_playerController), 5,
+            (GameObject)Resources.Load("Prefabs/Projectiles/EnergyProjectile")));
     }
+    
+    public SkillOption SearchSkillOption(string skillName)
+    {
+        foreach(SkillOption option in allSkillContainerList)
+        {
+            if (option.SkillName == skillName)
+                return option;
+        }
+        return null;
+    }
+}
+
+public class SkillOption
+{
+    public SkillOption(SkillBase skill,int weight)
+    {
+        this.Skill = skill;
+        this.Weight = weight;
+        this.SkillName = skill.SkillName;
+    }
+    public SkillOption(SkillActiveAttackBase skill,int weight,GameObject projectileObj)
+    {
+        skill.SkillAction(projectileObj);
+        this.Skill = skill;
+        this.Weight = weight;
+        this.SkillName = skill.SkillName;
+    }
+    public SkillBase Skill = null;
+    public int Weight = 0;
+    public string SkillName = "";
 }

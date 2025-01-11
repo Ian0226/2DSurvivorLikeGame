@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public class GameResultHandler : GameSystemBase
 {
+    private int highestGameTime = 0;
     public GameResultHandler(SurvivorLikeGame2DFacade survivorLikeGame) : base(survivorLikeGame)
     {
         Initialize();
@@ -25,16 +27,55 @@ public class GameResultHandler : GameSystemBase
     /// <summary>
     /// 遊戲結束
     /// </summary>
-    private void GameEnd(GameResult gameResult)
+    private async void GameEnd(GameResult gameResult)
     {
-        survivorLikeGame.SetGameResultUI(gameResult);
+        await SaveResultData(gameResult);
+    }
+
+    /// <summary>
+    /// 儲存遊玩資料
+    /// </summary>
+    /// <param name="gameResult"></param>
+    private async Task SaveResultData(GameResult gameResult)
+    {
+        var jsonGameResult = JsonUtility.ToJson(gameResult);
+        await FirebaseManager.Instance.SavePlayerGameResultData(jsonGameResult);
+
+        LoadPlayerHighestResult(gameResult);
+    }
+
+    /// <summary>
+    /// 傳回玩家生存時間最長的結果
+    /// </summary>
+    public async void LoadPlayerHighestResult(GameResult gameResult)
+    {
+        await FirebaseManager.Instance.LoadPlayerLog();
+        int gameTime = GameResultData.GameResults[0].GameTime;
+        for (int i = 0; i < GameResultData.GameResults.Count; i++)
+        {
+            if (GameResultData.GameResults[i].GameTime > gameTime)
+            {
+                gameTime = GameResultData.GameResults[i].GameTime;
+            }
+        }
+        highestGameTime = gameTime;
+
+        survivorLikeGame.SetGameResultUI(gameResult,highestGameTime);
         survivorLikeGame.ShowGameResultUI();
     }
 }
 
-public struct GameResult
+public class GameResult
 {
-    public long Score;
+    public int Score;
     public int GameTime;
-    //Own Skills
+    public string RecordTime;
+
+    public GameResult(int score, int gameTime, string recordTime)
+    {
+        this.Score = score;
+        this.GameTime = gameTime;
+        this.RecordTime = recordTime;
+    }
+    //Own Skills還沒做
 }

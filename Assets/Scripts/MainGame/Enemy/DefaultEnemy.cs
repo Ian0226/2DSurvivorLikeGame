@@ -46,8 +46,8 @@ public class DefaultEnemy : EnemyBase
 
     protected override void HandleOnDamageEffect()
     {
-        Debug.Log("¼½©ñ­µ®Ä " + this.takeDamageAudio);
-        this.enemyAudioSource.PlayOneShot(this.takeDamageAudio);
+        //this.enemyAudioSource.PlayOneShot(this.takeDamageAudio);
+        AudioManager.Instance.PlayerAudioOneShot(AudioManager.GameAudioSource.EnemyAudio, this.takeDamageAudio);
     }
 
     /// <summary>
@@ -55,6 +55,7 @@ public class DefaultEnemy : EnemyBase
     /// </summary>
     public override void HandleDeath()
     {
+        AudioManager.Instance.PlayerAudioOneShot(AudioManager.GameAudioSource.EnemyAudio, this.deadAudio);
         recycle(this);
         _survivorLikeGame.SetPlayerScore(this.rewardScore);
         _survivorLikeGame.CreateParticle(this.deadEffectObj, this.transform.position, null);

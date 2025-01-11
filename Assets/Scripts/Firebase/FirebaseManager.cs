@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase;
 using Firebase.Database;
+using System.Threading.Tasks;
 
 public class FirebaseManager
 {
@@ -82,7 +83,8 @@ public class FirebaseManager
             user = auth.CurrentUser;
             if(user != null)
             {
-                Debug.Log($"Login - {user.DisplayName}");
+                //Debug.Log($"Login - {user.DisplayName}");
+                Debug.Log($"Login - {user.UserId}");
             }
         }
     }
@@ -99,8 +101,6 @@ public class FirebaseManager
 
     public void LoadPlayerNickName()
     {
-        //string name = "";
-        //Debug.Log(user.UserId);
         reference.Child(auth.CurrentUser.UserId).Child("PlayerNickName").GetValueAsync().ContinueWith(task =>
         {
             DataSnapshot snapshot = task.Result;
@@ -113,6 +113,49 @@ public class FirebaseManager
             }
                 
         });
+    }
+
+    /// <summary>
+    /// 儲存玩家遊戲紀錄
+    /// </summary>
+    /// <param name="result"></param>
+    public async Task SavePlayerGameResultData(string result)
+    {
+        await reference.Child(auth.CurrentUser.UserId).Child("PlayerLogs").Push().SetRawJsonValueAsync(result).ContinueWith(task =>
+        {
+            if (task.IsCompletedSuccessfully)
+            {
+                Debug.Log($"Saved : {result}");
+            }
+        });
+        return;
+    }
+
+    /// <summary>
+    /// 讀取玩家遊戲紀錄
+    /// </summary>
+    public async Task LoadPlayerLog()
+    {
+        var task = reference.Child(auth.CurrentUser.UserId).Child("PlayerLogs").GetValueAsync();
+        await reference.Child(auth.CurrentUser.UserId).Child("PlayerLogs").GetValueAsync().ContinueWith(task =>
+        {  
+            if (task.IsFaulted)
+            {
+                Debug.Log("error");
+            }
+            if (task.IsCompletedSuccessfully)
+            {
+                DataSnapshot snapshot = task.Result;
+                foreach (var data in snapshot.Children)
+                {
+                    var jsonData = data.GetRawJsonValue();
+                    var resultData = JsonUtility.FromJson<GameResult>(jsonData);
+                    GameResultData.GameResults.Add(resultData);
+                    Debug.Log($"{resultData.Score} - {resultData.GameTime} - {resultData.RecordTime}");
+                }
+            }
+        });
+        return;
     }
 }
 

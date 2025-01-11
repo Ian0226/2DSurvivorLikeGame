@@ -67,7 +67,7 @@ public class WaveSystem : GameSystemBase
         {
             case 2:
                 CoroutineTool.StopInsEnemyCoroutine();
-                insEnemyCount += 2;//生成敵人數量增加
+                insEnemyCount += 1;//生成敵人數量增加
                 //insEnemyAction += InsEnemyAction_02;//生成等級2敵人
                 CoroutineTool.ExcuteInvokeRepeatInsEnemy(insEnemyAction, this.insEnemyInterval);
                 break;

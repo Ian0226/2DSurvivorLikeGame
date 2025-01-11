@@ -18,5 +18,5 @@ MonoBehaviour:
   KillReward: 1
   Hp: 10
   DeadEffectObj: {fileID: 291090247366406063, guid: 48eb7d613fb68574b965180dd419da71, type: 3}
-  enemyTakeDamageAudio: {fileID: 8300000, guid: 0a6a77fcdb2555c4bbb747fef861b609, type: 3}
-  enemyDeadAudio: {fileID: 8300000, guid: 6f545ca8bca8c3d4486de3867a8f57b5, type: 3}
+  enemyTakeDamageAudio: {fileID: 8300000, guid: 99a4c3ee2f3d0304babbe4f7b434032a, type: 3}
+  enemyDeadAudio: {fileID: 8300000, guid: c882f2dd74f03124d9d6364aac38ea8c, type: 3}
